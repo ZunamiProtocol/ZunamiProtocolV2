@@ -12,8 +12,7 @@ import { BigNumber } from "ethers";
 
 const crvUSD_USDT_pool_addr = "0x390f3595bca2df7d23783dfd126427cceb997bf4";
 const crvUSD_USDC_pool_addr = "0x4dece678ceceb27446b35c672dc7d61f30bad69e";
-const stETH_ETH_pool_addr = "0xdc24316b9ae028f1497c275eb9192a3ea0f67022";
-const stETH_ETH_pool_token_addr = "0x06325440d014e39736583c165c2963ba99faf14e";
+const stETH_ETH_pool_addr = "0x21E27a5E5513D6e65C4f830167390997aA84843a";
 const stETH_addr = "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84";
 
 describe("Conic Oracle", async () => {
@@ -88,7 +87,7 @@ describe("Conic Oracle", async () => {
 
       expect(await curveRegistryCache.isRegistered(stETH_ETH_pool_addr)).to.equal(true);
       expect((await curveRegistryCache.lpToken(stETH_ETH_pool_addr)).toLowerCase())
-        .to.equal(stETH_ETH_pool_token_addr.toLowerCase());
+        .to.equal(stETH_ETH_pool_addr.toLowerCase());
     })
   })
   describe("CurveLPOracle", async () => {
@@ -118,12 +117,12 @@ describe("Conic Oracle", async () => {
       // when
       const crvUSD_USDT_price = await curveLPOracle.getUSDPrice(crvUSD_USDT_pool_addr);
       const crvUSD_USDC_price = await curveLPOracle.getUSDPrice(crvUSD_USDC_pool_addr);
-      const stETH_ETH_price = await curveLPOracle.getUSDPrice(stETH_ETH_pool_token_addr);
+      const stETH_ETH_price = await curveLPOracle.getUSDPrice(stETH_ETH_pool_addr);
 
       // then
       expect(await curveLPOracle.isTokenSupported(crvUSD_USDT_pool_addr)).to.equal(true);
       expect(await curveLPOracle.isTokenSupported(crvUSD_USDC_pool_addr)).to.equal(true);
-      expect(await curveLPOracle.isTokenSupported(stETH_ETH_pool_token_addr)).to.equal(true);
+      expect(await curveLPOracle.isTokenSupported(stETH_ETH_pool_addr)).to.equal(true);
       expect(isInRange(crvUSD_USDT_price, crvUSD_USDT_virtualPrice.sub(stableThreshold), crvUSD_USDT_virtualPrice.add(stableThreshold)))
         .to.equal(true);
       expect(isInRange(crvUSD_USDC_price, crvUSD_USDC_virtualPrice.sub(stableThreshold), crvUSD_USDC_virtualPrice.add(stableThreshold)))
@@ -164,13 +163,13 @@ describe("Conic Oracle", async () => {
       // when
       const crvUSD_USDT_price = await genericOracle.getUSDPrice(crvUSD_USDT_pool_addr);
       const crvUSD_USDC_price = await genericOracle.getUSDPrice(crvUSD_USDC_pool_addr);
-      const stETH_ETH_price = await genericOracle.getUSDPrice(stETH_ETH_pool_token_addr);
+      const stETH_ETH_price = await genericOracle.getUSDPrice(stETH_ETH_pool_addr);
       const stETH_usdPrice = await genericOracle.getUSDPrice(stETH_addr);
 
       // then
       expect(await genericOracle.isTokenSupported(crvUSD_USDT_pool_addr)).to.equal(true);
       expect(await genericOracle.isTokenSupported(crvUSD_USDC_pool_addr)).to.equal(true);
-      expect(await genericOracle.isTokenSupported(stETH_ETH_pool_token_addr)).to.equal(true);
+      expect(await genericOracle.isTokenSupported(stETH_ETH_pool_addr)).to.equal(true);
       expect(isInRange(crvUSD_USDT_price, crvUSD_USDT_virtualPrice.sub(stableThreshold), crvUSD_USDT_virtualPrice.add(stableThreshold)))
         .to.equal(true);
       expect(isInRange(crvUSD_USDC_price, crvUSD_USDC_virtualPrice.sub(stableThreshold), crvUSD_USDC_virtualPrice.add(stableThreshold)))
