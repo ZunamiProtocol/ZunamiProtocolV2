@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
-import "../CurveStratBase.sol";
-import "./interfaces/IConvexRewards.sol";
-import "./interfaces/IConvexBooster.sol";
+import '../CurveStratBase.sol';
+import './interfaces/IConvexRewards.sol';
+import './interfaces/IConvexBooster.sol';
 
 abstract contract ConvexCurveStratBase is CurveStratBase {
     using SafeERC20 for IERC20Metadata;
@@ -30,21 +30,24 @@ abstract contract ConvexCurveStratBase is CurveStratBase {
         cvxBooster.depositAll(cvxPID, true);
     }
 
-    function removeLiquidity(uint256 amount, uint256[5] memory minTokenAmounts) internal override virtual {
+    function removeLiquidity(
+        uint256 amount,
+        uint256[5] memory minTokenAmounts
+    ) internal virtual override {
         cvxRewards.withdrawAndUnwrap(amount, false);
         super.removeLiquidity(amount, minTokenAmounts);
     }
 
-    function removeAllLiquidity() internal override virtual {
+    function removeAllLiquidity() internal virtual override {
         cvxRewards.withdrawAllAndUnwrap(true);
         super.removeAllLiquidity();
     }
 
-    function claimCollectedRewards() internal override virtual {
+    function claimCollectedRewards() internal virtual override {
         cvxRewards.getReward();
     }
 
-    function getLiquidityBalance() internal view override virtual returns(uint256) {
+    function getLiquidityBalance() internal view virtual override returns (uint256) {
         return cvxRewards.balanceOf(address(this));
     }
 }

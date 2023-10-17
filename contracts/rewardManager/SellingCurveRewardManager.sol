@@ -1,14 +1,14 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
 import '../Constants.sol';
-import "./interfaces/ICurveExchangePool.sol";
+import './interfaces/ICurveExchangePool.sol';
 import './interfaces/AggregatorV2V3Interface.sol';
-import "../interfaces/IRewardManager.sol";
-import "../interfaces/IStableConverter.sol";
+import '../interfaces/IRewardManager.sol';
+import '../interfaces/IStableConverter.sol';
 
 contract SellingCurveRewardManager is IRewardManager {
     using SafeERC20 for IERC20Metadata;
@@ -35,15 +35,19 @@ contract SellingCurveRewardManager is IRewardManager {
     IStableConverter public immutable stableConverter;
 
     constructor(address stableConverterAddr) {
-        require(stableConverterAddr != address(0), "StableConverter");
+        require(stableConverterAddr != address(0), 'StableConverter');
         stableConverter = IStableConverter(stableConverterAddr);
 
         tricrypto2 = ICurveExchangePool(Constants.CRV_TRICRYPTO2_ADDRESS);
 
-        rewardEthCurvePools[Constants.CRV_ADDRESS] = 0x4eBdF703948ddCEA3B11f675B4D1Fba9d2414A14; // https://curve.fi/#/ethereum/pools/factory-tricrypto-4
-        rewardEthCurvePools[Constants.CVX_ADDRESS] = 0xB576491F1E6e5E62f1d8F26062Ee822B40B0E0d4; // https://curve.fi/#/ethereum/pools/cvxeth
-        rewardEthCurvePools[Constants.FXS_ADDRESS] = 0x941Eb6F616114e4Ecaa85377945EA306002612FE; // https://curve.fi/#/ethereum/pools/fxseth
-        rewardEthCurvePools[Constants.SPELL_ADDRESS] = 0x98638FAcf9a3865cd033F36548713183f6996122; // https://curve.fi/#/ethereum/pools/spelleth
+        // https://curve.fi/#/ethereum/pools/factory-tricrypto-4
+        rewardEthCurvePools[Constants.CRV_ADDRESS] = 0x4eBdF703948ddCEA3B11f675B4D1Fba9d2414A14;
+        // https://curve.fi/#/ethereum/pools/cvxeth
+        rewardEthCurvePools[Constants.CVX_ADDRESS] = 0xB576491F1E6e5E62f1d8F26062Ee822B40B0E0d4;
+        // https://curve.fi/#/ethereum/pools/fxseth
+        rewardEthCurvePools[Constants.FXS_ADDRESS] = 0x941Eb6F616114e4Ecaa85377945EA306002612FE;
+        // https://curve.fi/#/ethereum/pools/spelleth
+        rewardEthCurvePools[Constants.SPELL_ADDRESS] = 0x98638FAcf9a3865cd033F36548713183f6996122;
 
         rewardUsdChainlinkOracles[
             Constants.CVX_ADDRESS
@@ -59,11 +63,7 @@ contract SellingCurveRewardManager is IRewardManager {
         ] = 0x8c110B94C5f1d347fAcF5E1E938AB2db60E3c9a8; // https://data.chain.link/ethereum/mainnet/crypto-usd/spell-usd
     }
 
-    function handle(
-        address reward,
-        uint256 amount,
-        address feeToken
-    ) public {
+    function handle(address reward, uint256 amount, address feeToken) public {
         if (amount == 0) return;
 
         ICurveExchangePool rewardEthPool = ICurveExchangePool(rewardEthCurvePools[reward]);
@@ -71,12 +71,7 @@ contract SellingCurveRewardManager is IRewardManager {
         IERC20Metadata(reward).safeIncreaseAllowance(address(rewardEthPool), amount);
 
         (uint256 i, uint256 j) = getExchangeIndexes(reward);
-        rewardEthPool.exchange(
-            i,
-            j,
-            amount,
-            0
-        );
+        rewardEthPool.exchange(i, j, amount, 0);
 
         IERC20Metadata weth = IERC20Metadata(Constants.WETH_ADDRESS);
         uint256 wethAmount = weth.balanceOf(address(this));
@@ -105,8 +100,8 @@ contract SellingCurveRewardManager is IRewardManager {
         IERC20Metadata(feeToken).safeTransfer(address(msg.sender), feeTokenAmount);
     }
 
-    function getExchangeIndexes(address reward) internal pure returns(uint256, uint256) {
-        if(reward == Constants.CRV_ADDRESS) {
+    function getExchangeIndexes(address reward) internal pure returns (uint256, uint256) {
+        if (reward == Constants.CRV_ADDRESS) {
             return (CURVE_TRICRV_POOL_CRV_ID, CURVE_TRICRV_POOL_WETH_ID);
         } else {
             return (CURVE_WETH_REWARD_POOL_REWARD_ID, CURVE_WETH_REWARD_POOL_WETH_ID);
@@ -123,11 +118,7 @@ contract SellingCurveRewardManager is IRewardManager {
         ICurveExchangePool rewardEthPool = ICurveExchangePool(rewardEthCurvePools[reward]);
 
         (uint256 i, uint256 j) = getExchangeIndexes(reward);
-        uint256 wethAmount = rewardEthPool.get_dy(
-            i,
-            j,
-            amount
-        );
+        uint256 wethAmount = rewardEthPool.get_dy(i, j, amount);
 
         uint256 usdtAmount = tricrypto2.get_dy(
             CURVE_TRICRYPTO2_POOL_WETH_ID,
@@ -142,15 +133,12 @@ contract SellingCurveRewardManager is IRewardManager {
         return stableConverter.valuate(Constants.USDT_ADDRESS, feeToken, usdtAmount);
     }
 
-    function checkSlippage(
-        address reward,
-        uint256 amount,
-        uint256 feeTokenAmount
-    ) internal view {
+    function checkSlippage(address reward, uint256 amount, uint256 feeTokenAmount) internal view {
         AggregatorV2V3Interface oracle = AggregatorV2V3Interface(rewardUsdChainlinkOracles[reward]);
         (, int256 answer, , , ) = oracle.latestRoundData();
 
-        uint256 feeTokenAmountByOracle = (uint256(answer) * amount) / 1e20; // reward decimals 18 + oracle decimals 2 (8 - 6)
+        // reward decimals 18 + oracle decimals 2 (8 - 6)
+        uint256 feeTokenAmountByOracle = (uint256(answer) * amount) / 1e20;
         uint256 feeTokenAmountByOracleWithSlippage = (feeTokenAmountByOracle *
             (SLIPPAGE_DENOMINATOR - defaultSlippage)) / SLIPPAGE_DENOMINATOR;
 

@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
@@ -34,10 +34,7 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
 
     modifier startedPool(uint256 pid) {
         require(_poolInfo.length != 0, 'pools empty');
-        require(
-            block.timestamp >= _poolInfo[pid].startTime,
-            'pool not started'
-        );
+        require(block.timestamp >= _poolInfo[pid].startTime, 'pool not started');
         _;
     }
 
@@ -46,10 +43,10 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         _;
     }
 
-    constructor(string memory name_, string memory symbol_)
-        ERC20(name_, symbol_)
-        AccessControlDefaultAdminRules(24 hours, msg.sender)
-    {}
+    constructor(
+        string memory name_,
+        string memory symbol_
+    ) ERC20(name_, symbol_) AccessControlDefaultAdminRules(24 hours, msg.sender) {}
 
     function poolInfo(uint256 pid) external view returns (PoolInfo memory) {
         return _poolInfo[pid];
@@ -63,7 +60,10 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         return _decimalsMultipliers;
     }
 
-    function _addTokens(address[] memory tokens_, uint256[] memory _tokenDecimalMultipliers) internal {
+    function _addTokens(
+        address[] memory tokens_,
+        uint256[] memory _tokenDecimalMultipliers
+    ) internal {
         for (uint256 i = 0; i < tokens_.length; i++) {
             _tokens[i] = IERC20Metadata(tokens_[i]);
             emit UpdatedToken(i, tokens_[i], _tokenDecimalMultipliers[i], address(0));
@@ -71,10 +71,10 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         }
     }
 
-    function addTokens(address[] memory tokens_, uint256[] memory _tokenDecimalMultipliers)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function addTokens(
+        address[] memory tokens_,
+        uint256[] memory _tokenDecimalMultipliers
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _addTokens(tokens_, _tokenDecimalMultipliers);
     }
 
@@ -85,7 +85,12 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _tokens[_tokenIndex] = IERC20Metadata(_token);
         _decimalsMultipliers[_tokenIndex] = _tokenDecimalMultiplier;
-        emit UpdatedToken(_tokenIndex, _token, _tokenDecimalMultiplier, address(_tokens[_tokenIndex]));
+        emit UpdatedToken(
+            _tokenIndex,
+            _token,
+            _tokenDecimalMultiplier,
+            address(_tokens[_tokenIndex])
+        );
     }
 
     function pause() external onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -96,7 +101,10 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         _unpause();
     }
 
-    function claimRewards(address receiver, IERC20Metadata[] memory rewardTokens) external onlyRole(CONTROLLER_ROLE) {
+    function claimRewards(
+        address receiver,
+        IERC20Metadata[] memory rewardTokens
+    ) external onlyRole(CONTROLLER_ROLE) {
         for (uint256 i = 0; i < _poolInfo.length; i++) {
             PoolInfo memory poolInfo_ = _poolInfo[i];
             if (poolInfo_.deposited > 0 && poolInfo_.enabled) {
@@ -122,7 +130,11 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         return _poolInfo.length;
     }
 
-    function deposit(uint256 pid, uint256[POOL_ASSETS] memory amounts, address receiver)
+    function deposit(
+        uint256 pid,
+        uint256[POOL_ASSETS] memory amounts,
+        address receiver
+    )
         external
         whenNotPaused
         enabledPool(pid)
@@ -130,8 +142,7 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         onlyRole(CONTROLLER_ROLE)
         returns (uint256)
     {
-
-        if(receiver == address(0)) {
+        if (receiver == address(0)) {
             receiver = _msgSender();
         }
 
@@ -141,18 +152,14 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
 
         for (uint256 i = 0; i < amounts.length; i++) {
             if (amounts[i] > 0) {
-                IERC20Metadata(_tokens[i]).safeTransfer(
-                    address(strategy),
-                    amounts[i]
-                );
+                IERC20Metadata(_tokens[i]).safeTransfer(address(strategy), amounts[i]);
             }
         }
         uint256 depositedValue = strategy.deposit(amounts);
 
         require(depositedValue > 0, 'low deposit');
 
-        return
-            processSuccessfulDeposit(receiver, depositedValue, amounts, holdingsBefore, pid);
+        return processSuccessfulDeposit(receiver, depositedValue, amounts, holdingsBefore, pid);
     }
 
     function processSuccessfulDeposit(
@@ -173,13 +180,7 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
 
         totalDeposited += depositedValue;
 
-        emit Deposited(
-            receiver,
-            depositedValue,
-            depositedTokens,
-            minted,
-            pid
-        );
+        emit Deposited(receiver, depositedValue, depositedTokens, minted, pid);
     }
 
     function withdraw(
@@ -187,14 +188,7 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         uint256 stableAmount,
         uint256[POOL_ASSETS] memory tokenAmounts,
         address receiver
-    )
-        external
-        whenNotPaused
-        enabledPool(pid)
-        startedPool(pid)
-        onlyRole(CONTROLLER_ROLE)
-    {
-
+    ) external whenNotPaused enabledPool(pid) startedPool(pid) onlyRole(CONTROLLER_ROLE) {
         IStrategy strategy = _poolInfo[pid].strategy;
         address userAddr = _msgSender();
 
@@ -210,12 +204,7 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
 
         uint256 userDeposit = (totalDeposited * stableAmount) / totalSupply();
 
-        processSuccessfulWithdrawal(
-            userAddr,
-            userDeposit,
-            stableAmount,
-            pid
-        );
+        processSuccessfulWithdrawal(userAddr, userDeposit, stableAmount, pid);
     }
 
     function processSuccessfulWithdrawal(
@@ -230,11 +219,10 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         emit Withdrawn(user, stableAmount, pid);
     }
 
-    function calcRatioSafe(uint256 outAmount, uint256 strategyDeposited)
-        internal
-        pure
-        returns (uint256 ration)
-    {
+    function calcRatioSafe(
+        uint256 outAmount,
+        uint256 strategyDeposited
+    ) internal pure returns (uint256 ration) {
         ration = (outAmount * DEPOSIT_RATIO_MULTIPLIER) / strategyDeposited;
         require(ration > 0 && ration <= DEPOSIT_RATIO_MULTIPLIER, 'wrong lp ratio');
     }
@@ -311,7 +299,10 @@ abstract contract ZunamiPool is IPool, ERC20, Pausable, AccessControlDefaultAdmi
         require(_poolInfo[_receiverStrategy].strategy.deposit(tokensRemainder) > 0, 'low amount');
     }
 
-    function _moveFunds(uint256 pid, uint256 withdrawPercent) private returns (uint256 stableAmount) {
+    function _moveFunds(
+        uint256 pid,
+        uint256 withdrawPercent
+    ) private returns (uint256 stableAmount) {
         if (withdrawPercent == FUNDS_DENOMINATOR) {
             _poolInfo[pid].strategy.withdrawAll();
 

@@ -1,4 +1,4 @@
-import "@nomicfoundation/hardhat-toolbox";
+import '@nomicfoundation/hardhat-toolbox';
 
 import 'hardhat-contract-sizer';
 import 'hardhat-deploy';
@@ -11,13 +11,13 @@ import { HardhatUserConfig } from 'hardhat/types';
 
 const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
-    gasReporter: {
-        currency: 'USD',
-        coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-        showTimeSpent: true,
-        enabled: true,
-        outputFile: './gas_report',
-    },
+    // gasReporter: {
+    //     currency: 'USD',
+    //     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    //     showTimeSpent: true,
+    //     enabled: true,
+    //     outputFile: './gas_report',
+    // },
     paths: {
         sources: './contracts',
         tests: './test',
@@ -27,7 +27,7 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             forking: {
-                url: `${process.env.ETH_NODE_API_KEY}`,
+                url: `https://eth.llamarpc.com`,
                 blockNumber: 18334216,
             },
             accounts: [
@@ -70,33 +70,33 @@ const config: HardhatUserConfig = {
             gasPrice: 'auto',
             loggingEnabled: false,
         },
-        mainnet: {
-            url: `${process.env.ETH_NODE_API_KEY}`,
-            chainId: 1,
-            gas: 'auto',
-            gasMultiplier: 1.2,
-            gasPrice: 20000000000,
-            accounts: [`${process.env.PRIVATE_KEY}`],
-            loggingEnabled: true,
-        },
-        polygon: {
-            url: `${process.env.POLYGON_NODE_API_KEY}`,
-            chainId: 137,
-            accounts: [`${process.env.PRIVATE_KEY}`],
-            gas: 'auto',
-            gasMultiplier: 1.2,
-            gasPrice: 100000000000,
-            loggingEnabled: true,
-        },
-        bsc: {
-            url: `${process.env.BINANCE_NODE_API_KEY}`,
-            chainId: 56,
-            accounts: [`${process.env.PRIVATE_KEY}`],
-            gas: 'auto',
-            gasMultiplier: 1.2,
-            gasPrice: 5000000000,
-            loggingEnabled: true,
-        },
+        // mainnet: {
+        //     url: `${process.env.ETH_NODE_API_KEY}`,
+        //     chainId: 1,
+        //     gas: 'auto',
+        //     gasMultiplier: 1.2,
+        //     gasPrice: 20000000000,
+        //     accounts: [`${process.env.PRIVATE_KEY}`],
+        //     loggingEnabled: true,
+        // },
+        // polygon: {
+        //     url: `${process.env.POLYGON_NODE_API_KEY}`,
+        //     chainId: 137,
+        //     accounts: [`${process.env.PRIVATE_KEY}`],
+        //     gas: 'auto',
+        //     gasMultiplier: 1.2,
+        //     gasPrice: 100000000000,
+        //     loggingEnabled: true,
+        // },
+        // bsc: {
+        //     url: `${process.env.BINANCE_NODE_API_KEY}`,
+        //     chainId: 56,
+        //     accounts: [`${process.env.PRIVATE_KEY}`],
+        //     gas: 'auto',
+        //     gasMultiplier: 1.2,
+        //     gasPrice: 5000000000,
+        //     loggingEnabled: true,
+        // },
         development: {
             url: 'http://127.0.0.1:8545',
             gas: 12400000,
@@ -119,11 +119,11 @@ const config: HardhatUserConfig = {
     mocha: {
         timeout: 500000,
     },
-    etherscan: {
-        apiKey: `${process.env.ETHERSCAN_API_KEY}`,
-        // apiKey: `${process.env.BSCSCAN_API_KEY}`,
-        // apiKey: `${process.env.POLYGON_API_KEY}`,
-    },
+    // etherscan: {
+    //     apiKey: `${process.env.ETHERSCAN_API_KEY}`,
+    //     // apiKey: `${process.env.BSCSCAN_API_KEY}`,
+    //     // apiKey: `${process.env.POLYGON_API_KEY}`,
+    // },
 };
 
 export default config;

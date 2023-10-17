@@ -1,8 +1,8 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
-import "../CurveStratBase.sol";
-import "./interfaces/IStakeDaoVault.sol";
+import '../CurveStratBase.sol';
+import './interfaces/IStakeDaoVault.sol';
 
 abstract contract StakeDaoCurveStratBase is CurveStratBase {
     using SafeERC20 for IERC20Metadata;
@@ -23,7 +23,10 @@ abstract contract StakeDaoCurveStratBase is CurveStratBase {
         vault.deposit(address(this), amount, true);
     }
 
-    function removeLiquidity(uint256 amount, uint256[5] memory minTokenAmounts) internal override virtual {
+    function removeLiquidity(
+        uint256 amount,
+        uint256[5] memory minTokenAmounts
+    ) internal virtual override {
         vault.withdraw(amount);
         super.removeLiquidity(amount, minTokenAmounts);
     }
@@ -33,11 +36,11 @@ abstract contract StakeDaoCurveStratBase is CurveStratBase {
         super.removeAllLiquidity();
     }
 
-    function claimCollectedRewards() internal override virtual {
+    function claimCollectedRewards() internal virtual override {
         vault.liquidityGauge().claim_rewards();
     }
 
-    function getLiquidityBalance() internal view override virtual returns(uint256) {
+    function getLiquidityBalance() internal view virtual override returns (uint256) {
         return vault.liquidityGauge().balanceOf(address(this));
     }
 }

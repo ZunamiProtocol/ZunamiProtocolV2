@@ -1,12 +1,12 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-import "../../interfaces/ICurvePool2.sol";
-import "../ZunamiStratBase.sol";
-import {IOracle} from "../../lib/ConicOracle/interfaces/IOracle.sol";
+import '../../interfaces/ICurvePool2.sol';
+import '../ZunamiStratBase.sol';
+import { IOracle } from '../../lib/ConicOracle/interfaces/IOracle.sol';
 
 abstract contract CurveStratBase is ZunamiStratBase {
     using SafeERC20 for IERC20Metadata;
@@ -15,24 +15,19 @@ abstract contract CurveStratBase is ZunamiStratBase {
     IERC20Metadata public immutable poolToken;
     IOracle public immutable oracle;
 
-    constructor(
-        address poolAddr,
-        address poolTokenAddr,
-        address oracleAddr
-    ) ZunamiStratBase() {
+    constructor(address poolAddr, address poolTokenAddr, address oracleAddr) ZunamiStratBase() {
         pool = ICurvePool2(poolAddr);
         poolToken = IERC20Metadata(poolTokenAddr);
         oracle = IOracle(oracleAddr);
     }
 
-    function convertLiquidityTokenAmount(uint256[5] memory amounts) internal view virtual returns(uint256[2] memory);
+    function convertLiquidityTokenAmount(
+        uint256[5] memory amounts
+    ) internal view virtual returns (uint256[2] memory);
 
-    function checkDepositSuccessful(uint256[5] memory amounts)
-        internal
-        view
-        override
-        returns (bool)
-    {
+    function checkDepositSuccessful(
+        uint256[5] memory amounts
+    ) internal view override returns (bool) {
         uint256[5] memory tokenDecimals = zunamiPool.tokenDecimalsMultipliers();
 
         uint256 amountsTotal;
@@ -47,7 +42,9 @@ abstract contract CurveStratBase is ZunamiStratBase {
         return (depositedLp * getLiquidityTokenPrice()) / PRICE_DENOMINATOR >= amountsMin;
     }
 
-    function depositLiquidityPool(uint256[5] memory amounts) internal override returns (uint256 poolTokenAmount) {
+    function depositLiquidityPool(
+        uint256[5] memory amounts
+    ) internal override returns (uint256 poolTokenAmount) {
         uint256[2] memory amounts2 = convertAndApproveTokens(address(pool), amounts);
         poolTokenAmount = pool.add_liquidity(amounts2, 0);
 
@@ -59,41 +56,32 @@ abstract contract CurveStratBase is ZunamiStratBase {
     function convertAndApproveTokens(
         address pool,
         uint256[5] memory amounts
-    ) internal virtual returns(uint256[2] memory amounts2);
+    ) internal virtual returns (uint256[2] memory amounts2);
 
     function getLiquidityTokenPrice() internal view override returns (uint256) {
         return oracle.getUSDPrice(address(poolToken));
     }
 
-    function calcTokenAmount(uint256[5] memory tokenAmounts, bool isDeposit)
-        external
-        view
-        override
-        returns (uint256 sharesAmount)
-    {
+    function calcTokenAmount(
+        uint256[5] memory tokenAmounts,
+        bool isDeposit
+    ) external view override returns (uint256 sharesAmount) {
         return pool.calc_token_amount(convertLiquidityTokenAmount(tokenAmounts), isDeposit);
     }
 
     function calcLiquidityTokenAmount(
         uint256 poolTokenRation, // multiplied by 1e18
         uint256[5] memory minTokenAmounts
-    )
-        internal
-        view
-        override
-        returns (
-            bool success,
-            uint256 poolTokenAmount
-        )
-    {
+    ) internal view override returns (bool success, uint256 poolTokenAmount) {
         poolTokenAmount = (getLiquidityBalance() * poolTokenRation) / 1e18;
         success = poolTokenAmount >= this.calcTokenAmount(minTokenAmounts, false);
     }
 
-    function getCurveRemovingTokenIndex() internal pure virtual returns(int128);
+    function getCurveRemovingTokenIndex() internal pure virtual returns (int128);
 
     function removeLiquidity(
-        uint256 amount, uint256[5] memory minTokenAmounts
+        uint256 amount,
+        uint256[5] memory minTokenAmounts
     ) internal virtual override {
         int128 curveTokenIndex = getCurveRemovingTokenIndex();
         pool.remove_liquidity_one_coin(
@@ -103,7 +91,7 @@ abstract contract CurveStratBase is ZunamiStratBase {
         );
     }
 
-    function removeAllLiquidity() internal override virtual {
+    function removeAllLiquidity() internal virtual override {
         int128 curveTokenIndex = getCurveRemovingTokenIndex();
         pool.remove_liquidity_one_coin(poolToken.balanceOf(address(this)), curveTokenIndex, 0);
     }

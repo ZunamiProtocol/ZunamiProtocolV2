@@ -1,16 +1,16 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/utils/Pausable.sol';
-import "@openzeppelin/contracts/access/extensions/AccessControlDefaultAdminRules.sol";
+import '@openzeppelin/contracts/access/extensions/AccessControlDefaultAdminRules.sol';
 
 import './interfaces/IStrategy.sol';
 import './interfaces/IPool.sol';
-import "./interfaces/IRewardManager.sol";
+import './interfaces/IRewardManager.sol';
 
-import "./Constants.sol";
+import './Constants.sol';
 
 abstract contract ZunamiPoolController is Pausable, AccessControlDefaultAdminRules {
     using SafeERC20 for IERC20Metadata;
@@ -31,7 +31,7 @@ abstract contract ZunamiPoolController is Pausable, AccessControlDefaultAdminRul
     event SetRewardTokens(IERC20Metadata[] rewardTokens);
 
     constructor(address pool_) AccessControlDefaultAdminRules(24 hours, msg.sender) {
-        require(pool_ != address(0), "Zero pool");
+        require(pool_ != address(0), 'Zero pool');
 
         rewardCollector = msg.sender;
 
@@ -46,30 +46,23 @@ abstract contract ZunamiPoolController is Pausable, AccessControlDefaultAdminRul
         _unpause();
     }
 
-    function setDefaultDepositPid(uint256 _newPoolId)
-    external
-    onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setDefaultDepositPid(uint256 _newPoolId) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(_newPoolId < pool.poolCount(), 'wrong pid');
 
         defaultDepositPid = _newPoolId;
         emit SetDefaultDepositPid(_newPoolId);
     }
 
-    function setDefaultWithdrawPid(uint256 _newPoolId)
-    external
-    onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setDefaultWithdrawPid(uint256 _newPoolId) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(_newPoolId < pool.poolCount(), 'wrong pid');
 
         defaultWithdrawPid = _newPoolId;
         emit SetDefaultWithdrawPid(_newPoolId);
     }
 
-    function setRewardTokens(IERC20Metadata[] memory rewardTokens_)
-    external
-    onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setRewardTokens(
+        IERC20Metadata[] memory rewardTokens_
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         rewardTokens = rewardTokens_;
         emit SetRewardTokens(rewardTokens);
     }
@@ -83,13 +76,11 @@ abstract contract ZunamiPoolController is Pausable, AccessControlDefaultAdminRul
         pool.claimRewards(rewardCollector, rewardTokens);
     }
 
-    function deposit(uint256[POOL_ASSETS] memory amounts, address receiver)
-    external
-    whenNotPaused
-    returns (uint256 shares)
-    {
-
-        if(receiver == address(0)) {
+    function deposit(
+        uint256[POOL_ASSETS] memory amounts,
+        address receiver
+    ) external whenNotPaused returns (uint256 shares) {
+        if (receiver == address(0)) {
             receiver = _msgSender();
         }
 

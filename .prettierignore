@@ -1,0 +1,30 @@
+# General
+.prettierignore
+.solhintignore
+.gitignore
+.env.example
+.env
+workspace.code-workspace
+.DS_STORE
+LICENSE
+.editorconfig
+.idea
+README.md
+
+# Hardhat
+coverage
+coverage.json
+artifacts
+cache
+typechained
+deployments
+typechain-types
+
+# JS
+node_modules
+package-lock.json
+yarn.lock
+
+# Solidity
+contracts/mock
+contracts/lib/ConicOracle

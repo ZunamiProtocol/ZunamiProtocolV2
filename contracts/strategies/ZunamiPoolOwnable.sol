@@ -1,8 +1,8 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import '@openzeppelin/contracts/access/Ownable2Step.sol';
-import "../interfaces/IPool.sol";
+import '../interfaces/IPool.sol';
 
 contract ZunamiPoolOwnable is Ownable2Step {
     error MustBeCalledByZunami();
@@ -16,20 +16,20 @@ contract ZunamiPoolOwnable is Ownable2Step {
     event ZunamiPoolSet(address zunamiPoolAddr);
 
     modifier onlyZunamiPool() {
-        if(_msgSender() != address(zunamiPool)) revert MustBeCalledByZunami();
+        if (_msgSender() != address(zunamiPool)) revert MustBeCalledByZunami();
         _;
     }
 
     constructor() Ownable(msg.sender) {}
 
     function setZunamiPool(address zunamiAddr) external onlyOwner {
-        if(zunamiAddr == address(0)) revert ZeroAddress();
+        if (zunamiAddr == address(0)) revert ZeroAddress();
         zunamiPool = IPool(zunamiAddr);
         emit ZunamiPoolSet(zunamiAddr);
     }
 
     /**
-    * @dev disable renounceOwnership for safety
+     * @dev disable renounceOwnership for safety
      */
     function renounceOwnership() public view override onlyOwner {
         revert MustHaveOwner();

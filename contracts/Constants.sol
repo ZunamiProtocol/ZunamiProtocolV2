@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 library Constants {
     address internal constant CRVUSD_ADDRESS = 0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E;
@@ -20,19 +20,23 @@ library Constants {
 
     address internal constant CRV_TRICRYPTO2_ADDRESS = 0xD51a44d3FaE010294C616388b506AcdA1bfAAE46;
 
-    address internal constant SDT_CRVUSD_USDT_VAULT_ADDRESS = 0x37b24ac19504C0c6FC1ADc8deb5D24f5C4F6A2f2;
-    address internal constant CRV_CRVUSD_USDT_LP_ADDRESS = 0x390f3595bCa2Df7d23783dFd126427CCeb997BF4;
+    address internal constant SDT_CRVUSD_USDT_VAULT_ADDRESS =
+        0x37b24ac19504C0c6FC1ADc8deb5D24f5C4F6A2f2;
+    address internal constant CRV_CRVUSD_USDT_LP_ADDRESS =
+        0x390f3595bCa2Df7d23783dFd126427CCeb997BF4;
     address internal constant CRV_CRVUSD_USDT_ADDRESS = 0x390f3595bCa2Df7d23783dFd126427CCeb997BF4;
 
-    address internal constant SDT_CRVUSD_USDC_VAULT_ADDRESS = 0xb618EA40cb1F5b08839Ba228C8dd58AC3DCA12F3;
-    address internal constant CRV_CRVUSD_USDC_LP_ADDRESS = 0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E;
+    address internal constant SDT_CRVUSD_USDC_VAULT_ADDRESS =
+        0xb618EA40cb1F5b08839Ba228C8dd58AC3DCA12F3;
+    address internal constant CRV_CRVUSD_USDC_LP_ADDRESS =
+        0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E;
     address internal constant CRV_CRVUSD_USDC_ADDRESS = 0x4DEcE678ceceb27446b35C672dC7d61F30bAD69E;
 
     address internal constant CRV_BOOSTER_ADDRESS = 0xF403C135812408BFbE8713b5A23a04b3D48AAE31;
 
     address internal constant CRV_ETH_stETH_ADDRESS = 0x21E27a5E5513D6e65C4f830167390997aA84843a;
     address internal constant CRV_ETH_stETH_LP_ADDRESS = 0x21E27a5E5513D6e65C4f830167390997aA84843a;
-    address internal constant CVX_ETH_stETH_REWARDS_ADDRESS = 0x6B27D7BC63F1999D14fF9bA900069ee516669ee8;
+    address internal constant CVX_ETH_stETH_REWARDS_ADDRESS =
+        0x6B27D7BC63F1999D14fF9bA900069ee516669ee8;
     uint256 internal constant CVX_ETH_stETH_PID = 177;
 }
-

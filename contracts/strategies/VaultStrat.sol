@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.20;
 
 import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-import "../interfaces/IStrategy.sol";
-import "./ZunamiPoolOwnable.sol";
+import '../interfaces/IStrategy.sol';
+import './ZunamiPoolOwnable.sol';
 
 contract VaultStrat is IStrategy, ZunamiPoolOwnable {
     using SafeERC20 for IERC20Metadata;
@@ -28,7 +28,8 @@ contract VaultStrat is IStrategy, ZunamiPoolOwnable {
         uint256 userDepositRatio, // multiplied by 1e18
         uint256[5] memory minTokenAmounts
     ) external onlyZunamiPool returns (bool) {
-        if(userDepositRatio == 0 || userDepositRatio > PRICE_DENOMINATOR) revert WrongRation(userDepositRatio);
+        if (userDepositRatio == 0 || userDepositRatio > PRICE_DENOMINATOR)
+            revert WrongRation(userDepositRatio);
 
         transferPortionTokensTo(receiver, userDepositRatio);
 
@@ -43,18 +44,23 @@ contract VaultStrat is IStrategy, ZunamiPoolOwnable {
         uint256 tokensHoldings = 0;
         for (uint256 i = 0; i < 5; i++) {
             IERC20Metadata token = zunamiPool.tokens()[i];
-            if(address(token) == address(0)) break;
-            tokensHoldings += token.balanceOf(address(this)) * zunamiPool.tokenDecimalsMultipliers()[i];
+            if (address(token) == address(0)) break;
+            tokensHoldings +=
+                token.balanceOf(address(this)) *
+                zunamiPool.tokenDecimalsMultipliers()[i];
         }
         return tokensHoldings;
     }
 
-    function claimRewards(address receiver, IERC20Metadata[] memory rewardTokens) external onlyZunamiPool {}
+    function claimRewards(
+        address receiver,
+        IERC20Metadata[] memory rewardTokens
+    ) external onlyZunamiPool {}
 
-    function calcTokenAmount(uint256[5] memory tokenAmounts, bool isDeposit)
-    external
-    view
-    returns (uint256 sharesAmount) {
+    function calcTokenAmount(
+        uint256[5] memory tokenAmounts,
+        bool isDeposit
+    ) external view returns (uint256 sharesAmount) {
         return 0;
     }
 
@@ -73,7 +79,9 @@ contract VaultStrat is IStrategy, ZunamiPoolOwnable {
     function transferPortionTokensTo(address withdrawer, uint256 userDepositRatio) internal {
         uint256 transferAmountOut;
         for (uint256 i = 0; i < 5; i++) {
-            transferAmountOut = (zunamiPool.tokens()[i].balanceOf(address(this)) * userDepositRatio) / 1e18;
+            transferAmountOut =
+                (zunamiPool.tokens()[i].balanceOf(address(this)) * userDepositRatio) /
+                1e18;
             if (transferAmountOut > 0) {
                 zunamiPool.tokens()[i].safeTransfer(withdrawer, transferAmountOut);
             }

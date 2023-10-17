@@ -1,6 +1,8 @@
 {
-    "extends": "solhint:default",
-    "rules": {
-        "compiler-version": ["error", "0.8.0"]
-    }
+  "extends": "solhint:default",
+  "rules": {
+    "compiler-version": ["error", "0.8.20"],
+    "modifier-name-mixedcase": "error",
+    "func-param-name-mixedcase": "error"
+  }
 }

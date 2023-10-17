@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 interface INativeConverter {
     function handle(
@@ -8,8 +8,5 @@ interface INativeConverter {
         uint256 slippage
     ) external payable returns (uint256);
 
-    function valuate(
-        bool buyToken,
-        uint256 amount
-    ) external view returns (uint256);
+    function valuate(bool buyToken, uint256 amount) external view returns (uint256);
 }

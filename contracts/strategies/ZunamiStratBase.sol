@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-import "../interfaces/IStrategy.sol";
-import "./ZunamiPoolOwnable.sol";
+import '../interfaces/IStrategy.sol';
+import './ZunamiPoolOwnable.sol';
 
 abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
     using SafeERC20 for IERC20Metadata;
@@ -25,19 +25,16 @@ abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
         minDepositAmount = _minDepositAmount;
     }
 
-    function calcTokenAmount(uint256[5] memory tokenAmounts, bool isDeposit)
-    external
-    view
-    virtual
-    returns (uint256 sharesAmount);
-
+    function calcTokenAmount(
+        uint256[5] memory tokenAmounts,
+        bool isDeposit
+    ) external view virtual returns (uint256 sharesAmount);
 
     function calcLiquidityValue(uint256 tokenAmount) internal view returns (uint256) {
         return (tokenAmount * getLiquidityTokenPrice()) / PRICE_DENOMINATOR;
     }
 
     function getLiquidityTokenPrice() internal view virtual returns (uint256);
-
 
     function totalHoldings() public view virtual returns (uint256) {
         uint256 poolHoldings = calcLiquidityValue(getLiquidityBalance());
@@ -52,8 +49,7 @@ abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
         return tokensHoldings + poolHoldings;
     }
 
-    function getLiquidityBalance() internal view virtual returns(uint256);
-
+    function getLiquidityBalance() internal view virtual returns (uint256);
 
     function deposit(uint256[5] memory amounts) external returns (uint256) {
         if (!checkDepositSuccessful(amounts)) {
@@ -66,7 +62,6 @@ abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
     function checkDepositSuccessful(uint256[5] memory amounts) internal view virtual returns (bool);
 
     function depositLiquidityPool(uint256[5] memory amounts) internal virtual returns (uint256);
-
 
     function withdraw(
         address receiver,
@@ -86,7 +81,7 @@ abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
         IERC20Metadata[POOL_ASSETS] memory tokens = zunamiPool.tokens();
         uint256[] memory prevBalances = new uint256[](5);
         for (uint256 i = 0; i < 5; i++) {
-            if(address(tokens[i]) == address(0)) break;
+            if (address(tokens[i]) == address(0)) break;
             prevBalances[i] = tokens[i].balanceOf(address(this));
         }
 
@@ -100,18 +95,14 @@ abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
     function calcLiquidityTokenAmount(
         uint256 poolTokenRation, // multiplied by 1e18
         uint256[5] memory tokenAmounts
-    )
-        internal
-        virtual
-        returns (
-            bool success,
-            uint256 removingCrvLps
-        );
+    ) internal virtual returns (bool success, uint256 removingCrvLps);
 
     function removeLiquidity(uint256 amount, uint256[5] memory minTokenAmounts) internal virtual;
 
-
-    function claimRewards(address receiver, IERC20Metadata[] memory rewardTokens) public onlyZunamiPool {
+    function claimRewards(
+        address receiver,
+        IERC20Metadata[] memory rewardTokens
+    ) public onlyZunamiPool {
         claimCollectedRewards();
 
         transferTokensOut(rewardTokens, receiver, fillArrayN(0, rewardTokens.length));
@@ -119,11 +110,14 @@ abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
 
     function claimCollectedRewards() internal virtual;
 
-
     function withdrawAll() external virtual onlyZunamiPool {
         removeAllLiquidity();
 
-        transferTokensOut(convertTokensToDynamic(zunamiPool.tokens()), _msgSender(), fillArrayN(0, 5));
+        transferTokensOut(
+            convertTokensToDynamic(zunamiPool.tokens()),
+            _msgSender(),
+            fillArrayN(0, 5)
+        );
     }
 
     function removeAllLiquidity() internal virtual;
@@ -133,12 +127,11 @@ abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
         address receiver,
         uint256[] memory prevBalances
     ) internal {
-
         uint256 transferAmount;
         IERC20Metadata token_;
         for (uint256 i = 0; i < tokens.length; i++) {
             token_ = tokens[i];
-            if(address(token_) == address(0)) break;
+            if (address(token_) == address(0)) break;
             transferAmount = token_.balanceOf(address(this)) - prevBalances[i];
             if (transferAmount > 0) {
                 token_.safeTransfer(receiver, transferAmount);
@@ -155,7 +148,10 @@ abstract contract ZunamiStratBase is IStrategy, ZunamiPoolOwnable {
         }
     }
 
-    function fillArrayN(uint256 _value, uint256 _count) internal pure returns (uint256[] memory values) {
+    function fillArrayN(
+        uint256 _value,
+        uint256 _count
+    ) internal pure returns (uint256[] memory values) {
         values = new uint256[](_count);
         for (uint256 i = 0; i < _count; i++) {
             values[i] = _value;

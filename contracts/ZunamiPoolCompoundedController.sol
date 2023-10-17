@@ -1,20 +1,25 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import '@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol';
 import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/utils/Pausable.sol';
-import "@openzeppelin/contracts/access/extensions/AccessControlDefaultAdminRules.sol";
+import '@openzeppelin/contracts/access/extensions/AccessControlDefaultAdminRules.sol';
 
 import './interfaces/IStrategy.sol';
 import './interfaces/IPool.sol';
-import "./interfaces/IRewardManager.sol";
+import './interfaces/IRewardManager.sol';
 
-import "./Constants.sol";
+import './Constants.sol';
 
-abstract contract ZunamiPoolCompoundedController is ERC20, ERC20Permit, Pausable, AccessControlDefaultAdminRules {
+abstract contract ZunamiPoolCompoundedController is
+    ERC20,
+    ERC20Permit,
+    Pausable,
+    AccessControlDefaultAdminRules
+{
     using SafeERC20 for IERC20Metadata;
 
     uint256 public constant FEE_DENOMINATOR = 1000;
@@ -47,25 +52,20 @@ abstract contract ZunamiPoolCompoundedController is ERC20, ERC20Permit, Pausable
     event AutoCompoundedAll(uint256 compoundedValue);
     event SetRewardTokens(IERC20Metadata[] rewardTokens);
 
-    event Deposited(
-        address indexed receiver,
-        uint256 depositedValue,
-        uint256 shares,
-        uint256 pid
-    );
+    event Deposited(address indexed receiver, uint256 depositedValue, uint256 shares, uint256 pid);
 
-    event Withdrawn(
-        address indexed withdrawer,
-        uint256 withdrawn,
-        uint256 pid
-    );
+    event Withdrawn(address indexed withdrawer, uint256 withdrawn, uint256 pid);
 
-    constructor(address pool_, string memory name_, string memory symbol_)
+    constructor(
+        address pool_,
+        string memory name_,
+        string memory symbol_
+    )
         ERC20(name_, symbol_)
         ERC20Permit(name_)
         AccessControlDefaultAdminRules(24 hours, msg.sender)
     {
-        require(pool_ != address(0), "Zero pool");
+        require(pool_ != address(0), 'Zero pool');
 
         feeDistributor = msg.sender;
 
@@ -91,40 +91,30 @@ abstract contract ZunamiPoolCompoundedController is ERC20, ERC20Permit, Pausable
         managementFee = newManagementFee;
     }
 
-    function setDefaultDepositPid(uint256 _newPoolId)
-    external
-    onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setDefaultDepositPid(uint256 _newPoolId) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(_newPoolId < pool.poolCount(), 'wrong pid');
 
         defaultDepositPid = _newPoolId;
         emit SetDefaultDepositPid(_newPoolId);
     }
 
-    function setDefaultWithdrawPid(uint256 _newPoolId)
-    external
-    onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setDefaultWithdrawPid(uint256 _newPoolId) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(_newPoolId < pool.poolCount(), 'wrong pid');
 
         defaultWithdrawPid = _newPoolId;
         emit SetDefaultWithdrawPid(_newPoolId);
     }
 
-    function setFeeTokenId(uint256 _tokenId)
-    external
-    onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setFeeTokenId(uint256 _tokenId) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(managementFees == 0, 'Withdraw fee');
 
         feeTokenId = _tokenId;
         emit SetFeeTokenId(_tokenId);
     }
 
-    function setRewardTokens(IERC20Metadata[] memory rewardTokens_)
-    external
-    onlyRole(DEFAULT_ADMIN_ROLE)
-    {
+    function setRewardTokens(
+        IERC20Metadata[] memory rewardTokens_
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         rewardTokens = rewardTokens_;
         emit SetRewardTokens(rewardTokens);
     }
@@ -185,11 +175,7 @@ abstract contract ZunamiPoolCompoundedController is ERC20, ERC20Permit, Pausable
             if (rewardBalances[i] == 0) continue;
             rewardToken_ = rewardTokens[i];
             rewardToken_.transfer(address(rewardManager_), rewardBalances[i]);
-            rewardManager_.handle(
-                address(rewardToken_),
-                rewardBalances[i],
-                address(feeToken_)
-            );
+            rewardManager_.handle(address(rewardToken_), rewardBalances[i], address(feeToken_));
         }
 
         uint256 feeTokenBalanceAfter = feeToken_.balanceOf(address(this));
@@ -209,12 +195,11 @@ abstract contract ZunamiPoolCompoundedController is ERC20, ERC20Permit, Pausable
         return (_holdings * 1e18) / _tokens;
     }
 
-    function deposit(uint256[POOL_ASSETS] memory amounts, address receiver)
-        external
-        whenNotPaused
-        returns (uint256 shares)
-    {
-        if(receiver == address(0)) {
+    function deposit(
+        uint256[POOL_ASSETS] memory amounts,
+        address receiver
+    ) external whenNotPaused returns (uint256 shares) {
+        if (receiver == address(0)) {
             receiver = _msgSender();
         }
 
@@ -238,12 +223,7 @@ abstract contract ZunamiPoolCompoundedController is ERC20, ERC20Permit, Pausable
             shares = (totalSupply() * depositedValue) / stableBefore;
         }
 
-        emit Deposited(
-            receiver,
-            depositedValue,
-            shares,
-            defaultDepositPid
-        );
+        emit Deposited(receiver, depositedValue, shares, defaultDepositPid);
         _mint(receiver, shares);
     }
 

@@ -13,16 +13,23 @@ The number of users in Yield-farming applications is growing exponentially, but 
 ## What problems does Zunami Protocol solve?
 
 #### 1. Complicated UX due to the number of functioning stablecoin pools.
+
 #### 2. Frequent interest rates changes in yield-farming pools.
+
 #### 3. Deposit and funds withdrawal is too expensive.
+
 #### 4. Costly & inconvenient rewards selling on your own.
 
 ## Zunami Protocol benefits
 
 #### 1. Simplified usage. New UI makes user journey in DeFi smooth & easy. Perform complex interactions in one step.
+
 #### 2. Automated revenue aggregator. Less hassle, more profit. A sophisticated decentralized system makes sure your savings work even while you sleep. Delegate, automate, enjoy.
+
 #### 3. Low entry threshold. Zunami Protocol establishes a new gateway to the DeFi realm making yield-farming accessible not only to the crypto whales.
+
 #### 4. Cross-chain liquidity providing. Earn in the best pools and protocols, no matter what blockchain they are on.
+
 #### 5. DAO-oriented project.
 
 ## Our contacts
@@ -42,3 +49,21 @@ The number of users in Yield-farming applications is growing exponentially, but 
 #### 7. Blog - https://zunamiprotocol.medium.com/
 
 #### 8. Email - hello@zunami.io
+
+
+# Development
+
+### **Lint**
+
+```bash
+npm run lint:check
+```
+
+Runs solhint.
+<br/>
+
+### **Prettier (lint fix)**
+
+```bash
+npm run lint:fix
+```
