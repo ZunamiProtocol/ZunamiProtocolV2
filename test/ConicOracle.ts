@@ -154,11 +154,9 @@ describe('Conic Oracle', async () => {
         it('Should return LP token & token prices', async () => {
             // given
             const { genericOracle, curveRegistryCache } = await loadFixture(deployFixture);
-            // given
             await curveRegistryCache.initPool(crvUSD_USDT_pool_addr);
             await curveRegistryCache.initPool(crvUSD_USDC_pool_addr);
             await curveRegistryCache.initPool(stETH_ETH_pool_addr);
-            // 1081569895558167776
             const stableThreshold = BigNumber.from('5000000000000000');
             const ethThreshold = BigNumber.from('90000000000000000');
             const crvUSD_USDT_pool = (await ethers.getContractAt(
