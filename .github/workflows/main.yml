@@ -1,13 +1,13 @@
 name: Smart contracts build
 
-on: [ push, workflow_dispatch ]
+on: [push, workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: Compile, test and analyze
     env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

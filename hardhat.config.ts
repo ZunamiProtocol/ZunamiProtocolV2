@@ -10,11 +10,11 @@ import 'dotenv/config';
 import { HardhatUserConfig } from 'hardhat/types';
 
 const REPORT_GAS = !!process.env.REPORT_GAS;
-const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
-const ETH_NODE_API_KEY = process.env.ETH_NODE_API_KEY
-const POLYGON_NODE_API_KEY = process.env.POLYGON_NODE_API_KEY
-const BINANCE_NODE_API_KEY = process.env.BINANCE_NODE_API_KEY
-const PRIVATE_KEY = process.env.PRIVATE_KEY
+const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY;
+const ETH_NODE_API_KEY = process.env.ETH_NODE_API_KEY;
+const POLYGON_NODE_API_KEY = process.env.POLYGON_NODE_API_KEY;
+const BINANCE_NODE_API_KEY = process.env.BINANCE_NODE_API_KEY;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
