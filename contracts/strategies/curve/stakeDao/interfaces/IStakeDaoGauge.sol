@@ -9,4 +9,8 @@ interface IStakeDaoGauge is IERC20 {
     function claim_rewards() external;
 
     function withdraw(uint256 _value, address _addr, bool _claim_rewards) external;
+
+    function reward_tokens(uint256 id) external view returns (address);
+
+    function reward_count() external view returns (uint256);
 }

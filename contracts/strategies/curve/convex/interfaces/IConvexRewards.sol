@@ -15,4 +15,10 @@ interface IConvexRewards {
     function withdrawAndUnwrap(uint256 amount, bool claim) external;
 
     function getReward() external returns (bool);
+
+    function extraRewardsLength() external view returns (uint256);
+
+    function extraRewards(uint256 id) external view returns (address extraRewardsAddress);
+
+    function rewardToken() external view returns (address);
 }
