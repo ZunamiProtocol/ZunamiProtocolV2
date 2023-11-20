@@ -111,12 +111,11 @@ describe('Reward Viewer', async () => {
                 'UsdcCrvUsdStakeDaoCurve'
             );
             const usdcCrvUsdStakeDaoCurveStrategy =
-                (await usdcCrvUsdStakeDaoCurveStrategyFactory.deploy(
-                    genericOracle.address
-                )) as UsdcCrvUsdStakeDaoCurve;
+                (await usdcCrvUsdStakeDaoCurveStrategyFactory.deploy()) as UsdcCrvUsdStakeDaoCurve;
             await usdcCrvUsdStakeDaoCurveStrategy.deployed();
             await usdcCrvUsdStakeDaoCurveStrategy.setZunamiPool(zunamiPool.address);
             await usdcCrvUsdStakeDaoCurveStrategy.setStableConverter(stableConverter.address);
+            await usdcCrvUsdStakeDaoCurveStrategy.setPriceOracle(genericOracle.address);
 
             const tokenApprovedAmount = '1000000';
             await dai
@@ -197,12 +196,11 @@ describe('Reward Viewer', async () => {
                 'UsdtCrvUsdStakeDaoCurve'
             );
             const usdtCrvUsdStakeDaoCurveStrategy =
-                (await usdtCrvUsdStakeDaoCurveStrategyFactory.deploy(
-                    genericOracle.address
-                )) as UsdtCrvUsdStakeDaoCurve;
+                (await usdtCrvUsdStakeDaoCurveStrategyFactory.deploy()) as UsdtCrvUsdStakeDaoCurve;
             await usdtCrvUsdStakeDaoCurveStrategy.deployed();
             await usdtCrvUsdStakeDaoCurveStrategy.setZunamiPool(zunamiPool.address);
             await usdtCrvUsdStakeDaoCurveStrategy.setStableConverter(stableConverter.address);
+            await usdtCrvUsdStakeDaoCurveStrategy.setPriceOracle(genericOracle.address);
 
             const tokenApprovedAmount = '1000000';
             await dai
@@ -266,6 +264,7 @@ describe('Reward Viewer', async () => {
     });
 
     describe('Get convex-curve strategy rewards', async () => {
+      // TODO: fix test after changes in test/integration/ZunETHFlow.ts for 'stEthEthConvexCurveStrat' strategy
         it('Should return rewards for ETH_stETH strategy', async () => {
             // given
             const { owner, rewardViewer, otherAccount } = await loadFixture(deployFixture);
@@ -282,12 +281,12 @@ describe('Reward Viewer', async () => {
             const stEthEthConvexCurveStrategyFactory = await ethers.getContractFactory(
                 'stEthEthConvexCurveStrat'
             );
-            const stEthEthConvexCurveStrategy = (await stEthEthConvexCurveStrategyFactory.deploy(
-                genericOracle.address
-            )) as StEthEthConvexCurveStrat;
+            const stEthEthConvexCurveStrategy =
+                (await stEthEthConvexCurveStrategyFactory.deploy()) as StEthEthConvexCurveStrat;
             await stEthEthConvexCurveStrategy.deployed();
             await stEthEthConvexCurveStrategy.setZunamiPool(zunamiPool.address);
             await stEthEthConvexCurveStrategy.setNativeConverter(frxEthNativeConverter.address);
+            await stEthEthConvexCurveStrategy.setPriceOracle(genericOracle.address);
 
             const tokenApprovedAmount = '10000';
             await wEth
