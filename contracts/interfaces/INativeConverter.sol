@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 interface INativeConverter {
     function handle(bool buyToken, uint256 amount, uint256 slippage) external returns (uint256);

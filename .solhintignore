@@ -4,3 +4,4 @@ contracts/strategies/curve/convex/interfaces
 contracts/strategies/curve/stakeDao/interfaces
 contracts/lib/ConicOracle
 contracts/rewardManager/interfaces
+contracts/utils/rewardManager/interfaces

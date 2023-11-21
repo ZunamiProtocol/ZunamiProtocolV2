@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
@@ -25,7 +25,8 @@ contract StakingRewardDistributor is IStakingRewardDistributor, AccessControl, R
     uint256 public constant PERCENT_DENOMINATOR = 1e3;
 
     uint256 public constant BLOCKS_IN_2_WEEKS = (14 * 24 * 60 * 60) / 12; //TODO: decide where replace with variable
-    uint256 public constant BLOCKS_IN_4_MONTHS = (4 * 30 * 24 * 60 * 60) / 12; //TODO: decide where replace with variable
+    //TODO: decide where replace with variable
+    uint256 public constant BLOCKS_IN_4_MONTHS = (4 * 30 * 24 * 60 * 60) / 12;
 
     // Info of each user per pool.
     struct UserPoolInfo {

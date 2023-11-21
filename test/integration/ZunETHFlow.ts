@@ -10,8 +10,8 @@ import { increaseChainTime } from '../utils/IncreaseChainTime';
 import { createAndInitConicOracles } from '../utils/CreateAndInitConicOracles';
 import { createConvertersAndRewardManagerContracts } from '../utils/CreateConvertersAndRewardManagerContracts';
 import { createStrategies } from '../utils/CreateStrategies';
-import { createPoolAndControllerZunETH } from '../utils/createPoolAndControllerZunETH';
-import { getMinAmountZunETH } from '../utils/getMinAmountZunETH';
+import { createPoolAndControllerZunETH } from '../utils/CreatePoolAndControllerZunETH';
+import { getMinAmountZunETH } from '../utils/GetMinAmountZunETH';
 import { createEthCoins } from '../utils/CreateEthCoins';
 import { mintEthCoins } from '../utils/MintEthCoins';
 

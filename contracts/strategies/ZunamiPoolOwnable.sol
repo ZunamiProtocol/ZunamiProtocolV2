@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 import '@openzeppelin/contracts/access/Ownable2Step.sol';
 import '../interfaces/IPool.sol';

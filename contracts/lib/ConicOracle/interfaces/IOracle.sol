@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 interface IOracle {
     /// @notice returns the price in USD of symbol.

@@ -1,5 +1,9 @@
 import { ethers } from 'hardhat';
-import { ZunamiPoolBaseController, ZunamiPool } from '../../typechain-types';
+import {
+    ZunamiPoolControllerBase,
+    ZunamiPool,
+    ZunamiPoolThroughController,
+} from '../../typechain-types';
 import * as addrs from '../address.json';
 
 export async function createPoolAndControllerZunETH() {
@@ -11,7 +15,7 @@ export async function createPoolAndControllerZunETH() {
     );
     const zunamiPoolController = (await ZunamiPooControllerZunETHFactory.deploy(
         zunamiPool.address
-    )) as ZunamiPoolBaseController;
+    )) as ZunamiPoolThroughController;
 
     await zunamiPoolController.setRewardTokens([
         addrs.crypto.crv,

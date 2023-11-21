@@ -8,6 +8,7 @@ jobs:
     name: Compile, test and analyze
     env:
       PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      PROVIDER_URL: ${{ secrets.PROVIDER_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

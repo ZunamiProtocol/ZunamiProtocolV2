@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 import { IConvexBooster } from '../strategies/curve/convex/interfaces/IConvexBooster.sol';
 import { IConvexMinter } from '../strategies/curve/convex/interfaces/IConvexMinter.sol';

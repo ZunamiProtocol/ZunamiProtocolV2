@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.22;
 
 interface IStakingRewardDistributor {
     function rewardTokenTidByAddress(address rewardToken) external view returns (uint256);

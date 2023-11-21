@@ -10,6 +10,8 @@ LICENSE
 .editorconfig
 .idea
 README.md
+abi
+audit
 
 # Hardhat
 coverage

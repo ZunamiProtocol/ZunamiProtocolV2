@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 interface ICurvePoolV1Eth {
     function add_liquidity(uint256[2] calldata amounts, uint256 min_mint_amount) external payable;

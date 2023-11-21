@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 interface IStableConverter {
     function handle(address from, address to, uint256 amount, uint256 slippage) external;

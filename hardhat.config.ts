@@ -11,8 +11,8 @@ import { HardhatUserConfig } from 'hardhat/types';
 
 const REPORT_GAS = !!process.env.REPORT_GAS;
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY;
-const ETH_NODE_API_KEY = process.env.ETH_NODE_API_KEY;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const PROVIDER_URL = process.env.PROVIDER_URL;
 
 const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
@@ -31,7 +31,7 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             forking: {
-                url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+                url: `${PROVIDER_URL}`,
                 blockNumber: 18334216,
             },
             accounts: [
@@ -99,7 +99,7 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             {
-                version: '0.8.21',
+                version: '0.8.22',
                 settings: {
                     optimizer: {
                         enabled: true,
