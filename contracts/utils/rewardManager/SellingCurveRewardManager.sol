@@ -48,6 +48,8 @@ contract SellingCurveRewardManager is IRewardManager {
         rewardEthCurvePools[Constants.FXS_ADDRESS] = 0x941Eb6F616114e4Ecaa85377945EA306002612FE;
         // https://curve.fi/#/ethereum/pools/spelleth
         rewardEthCurvePools[Constants.SPELL_ADDRESS] = 0x98638FAcf9a3865cd033F36548713183f6996122;
+        // https://curve.fi/#/ethereum/pools/factory-crypto-11
+        rewardEthCurvePools[Constants.SDT_ADDRESS] = 0xfB8814D005C5f32874391e888da6eB2fE7a27902;
 
         rewardUsdChainlinkOracles[
             Constants.CVX_ADDRESS
@@ -132,6 +134,8 @@ contract SellingCurveRewardManager is IRewardManager {
     }
 
     function checkSlippage(address reward, uint256 amount, uint256 feeTokenAmount) internal view {
+        address oracleAddress = rewardUsdChainlinkOracles[reward];
+        if (oracleAddress == address(0)) return;
         AggregatorV2V3Interface oracle = AggregatorV2V3Interface(rewardUsdChainlinkOracles[reward]);
         (, int256 answer, , , ) = oracle.latestRoundData();
 

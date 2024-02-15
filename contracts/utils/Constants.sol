@@ -12,6 +12,7 @@ library Constants {
     address internal constant CRV_ADDRESS = 0xD533a949740bb3306d119CC777fa900bA034cd52;
     address internal constant FXS_ADDRESS = 0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0;
     address internal constant SPELL_ADDRESS = 0x090185f2135308BaD17527004364eBcC2D37e5F6;
+    address internal constant SDT_ADDRESS = 0x73968b9a57c6E53d41345FD57a6E6ae27d6CDB2F;
     address internal constant SFRXETH_ADDRESS = 0xac3E018457B222d93114458476f3E3416Abbe38F;
     address internal constant zunUSD_ADDRESS = address(0); // Will be added after deployment of zunUSD v2 pool
     address internal constant zunUSD_CONTROLLER_ADDRESS = address(0); // Will be added after deployment of zunUSD v2 pool controller

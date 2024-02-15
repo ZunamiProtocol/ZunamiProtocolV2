@@ -12,7 +12,8 @@ import { HardhatUserConfig } from 'hardhat/types';
 const REPORT_GAS = !!process.env.REPORT_GAS;
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
-const PROVIDER_URL = process.env.PROVIDER_URL;
+export const PROVIDER_URL = process.env.PROVIDER_URL;
+export const FORK_BLOCK_NUMBER = 18334216;
 
 const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
@@ -32,7 +33,7 @@ const config: HardhatUserConfig = {
         hardhat: {
             forking: {
                 url: `${PROVIDER_URL}`,
-                blockNumber: 18334216,
+                blockNumber: FORK_BLOCK_NUMBER,
             },
             accounts: [
                 // 5 accounts with 10^14 ETH each
