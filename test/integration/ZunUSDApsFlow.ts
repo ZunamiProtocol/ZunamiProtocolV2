@@ -301,45 +301,48 @@ describe('ZunUSD flow APS tests', () => {
     });
 
     it('should deposit to aps using zap', async () => {
-      const {
-        admin,
-        zunamiPool,
-        zunamiPoolController,
-        zunamiPoolAps,
-        zunamiPoolControllerAps,
-        dai,
-        usdc,
-        usdt,
-        strategies,
-        strategiesAps,
-      } = await loadFixture(deployFixture);
+        const {
+            admin,
+            zunamiPool,
+            zunamiPoolController,
+            zunamiPoolAps,
+            zunamiPoolControllerAps,
+            dai,
+            usdc,
+            usdt,
+            strategies,
+            strategiesAps,
+        } = await loadFixture(deployFixture);
 
-      // Add strategies to omnipool and aps pool
-      const sid = 0;
-      await zunamiPool.addStrategy(strategies[sid].address);
-      await zunamiPoolAps.addStrategy(strategiesAps[sid].address);
+        // Add strategies to omnipool and aps pool
+        const sid = 0;
+        await zunamiPool.addStrategy(strategies[sid].address);
+        await zunamiPoolAps.addStrategy(strategiesAps[sid].address);
 
-      //deploy zap
-      const ZunamiDepositZapFactory = await ethers.getContractFactory('ZunamiDepositZap');
-      const zunamiDepositZap = (await ZunamiDepositZapFactory.deploy(zunamiPoolController.address, zunamiPoolControllerAps.address)) as ZunamiDepositZap;
+        //deploy zap
+        const ZunamiDepositZapFactory = await ethers.getContractFactory('ZunamiDepositZap');
+        const zunamiDepositZap = (await ZunamiDepositZapFactory.deploy(
+            zunamiPoolController.address,
+            zunamiPoolControllerAps.address
+        )) as ZunamiDepositZap;
 
-      expect(await zunamiPoolControllerAps.balanceOf(admin.getAddress())).to.eq(0);
+        expect(await zunamiPoolControllerAps.balanceOf(admin.getAddress())).to.eq(0);
 
-      const tokenAmount = '10000';
-      await dai
-        .connect(admin)
-        .approve(zunamiDepositZap.address, parseUnits(tokenAmount, 'ether'));
-      await usdc
-        .connect(admin)
-        .approve(zunamiDepositZap.address, parseUnits(tokenAmount, 'mwei'));
-      await usdt
-        .connect(admin)
-        .approve(zunamiDepositZap.address, parseUnits(tokenAmount, 'mwei'));
+        const tokenAmount = '10000';
+        await dai
+            .connect(admin)
+            .approve(zunamiDepositZap.address, parseUnits(tokenAmount, 'ether'));
+        await usdc
+            .connect(admin)
+            .approve(zunamiDepositZap.address, parseUnits(tokenAmount, 'mwei'));
+        await usdt
+            .connect(admin)
+            .approve(zunamiDepositZap.address, parseUnits(tokenAmount, 'mwei'));
 
-      await zunamiDepositZap
-        .connect(admin)
-        .deposit(getMinAmountZunUSD(tokenAmount), admin.getAddress());
+        await zunamiDepositZap
+            .connect(admin)
+            .deposit(getMinAmountZunUSD(tokenAmount), admin.getAddress());
 
-      expect(await zunamiPoolControllerAps.balanceOf(admin.getAddress())).to.gt(0);
+        expect(await zunamiPoolControllerAps.balanceOf(admin.getAddress())).to.gt(0);
     });
 });

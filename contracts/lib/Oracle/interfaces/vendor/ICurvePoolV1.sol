@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.22;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.23;
 
 interface ICurvePoolV1 {
     function get_virtual_price() external view returns (uint256);

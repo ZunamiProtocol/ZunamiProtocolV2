@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.23;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
@@ -232,7 +232,7 @@ contract ZunamiPool is IPool, ERC20, Pausable, AccessControl {
         uint256 depositedValue,
         uint256[POOL_ASSETS] memory depositedTokens,
         uint256 sid
-    ) internal returns (uint256){
+    ) internal returns (uint256) {
         uint256 locked = 0;
         if (totalSupply() == 0) {
             if (depositedValue <= MINIMUM_LIQUIDITY) revert WrongAmount();

@@ -7,7 +7,10 @@ async function main() {
 
     const curveRegistryCacheAddress = '0x2E68bE71687469280319BCf9E635a8783Db5d238';
 
-    const curveRegistryCache = await ethers.getContractAt('CurveRegistryCache', curveRegistryCacheAddress);
+    const curveRegistryCache = await ethers.getContractAt(
+        'CurveRegistryCache',
+        curveRegistryCacheAddress
+    );
     console.log('CurveRegistryCache attached to:', curveRegistryCache.address);
 
     for (const curvePool of curvePools) {
@@ -22,5 +25,3 @@ main()
         console.error(error);
         process.exit(1);
     });
-
-

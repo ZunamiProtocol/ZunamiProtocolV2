@@ -15,7 +15,9 @@ async function createAndInitStrategy(zunamiPool, stratName, oracle, stableConver
     if (!!stableConverter) {
         result = await strategy.setStableConverter(stableConverter.address);
         await result.wait();
-        console.log(`Set stable converter address ${stableConverter.address} in ${stratName} strategy`);
+        console.log(
+            `Set stable converter address ${stableConverter.address} in ${stratName} strategy`
+        );
     }
 
     // result = await zunamiPool.addStrategy(strategy.address);
@@ -45,14 +47,15 @@ async function main() {
     console.log('ZunamiPoolZunUSD:', zunamiPool.address);
 
     console.log('Deploy zunUSD pool controller:');
-    const ZunamiPoolController = await ethers.getContractFactory(
-        'ZunamiPoolControllerZunUSD'
-    );
+    const ZunamiPoolController = await ethers.getContractFactory('ZunamiPoolControllerZunUSD');
     const zunamiPoolController = await ZunamiPoolController.deploy(zunamiPool.address);
     await zunamiPoolController.deployed();
     console.log('ZunamiPoolControllerZunUSD:', zunamiPoolController.address);
 
-    let result = await zunamiPool.grantRole(await zunamiPool.CONTROLLER_ROLE(), zunamiPoolController.address);
+    let result = await zunamiPool.grantRole(
+        await zunamiPool.CONTROLLER_ROLE(),
+        zunamiPoolController.address
+    );
     await result.wait();
     console.log(
         'ZunamiPoolController granted CONTROLLER_ROLE:',
@@ -60,8 +63,18 @@ async function main() {
     );
 
     await createAndInitStrategy(zunamiPool, 'ZunUSDVaultStrat', null, null);
-    await createAndInitStrategy(zunamiPool, 'UsdcCrvUsdStakeDaoCurve', genericOracleAddr, stableConverter);
-    await createAndInitStrategy(zunamiPool, 'UsdtCrvUsdStakeDaoCurve', genericOracleAddr, stableConverter);
+    await createAndInitStrategy(
+        zunamiPool,
+        'UsdcCrvUsdStakeDaoCurve',
+        genericOracleAddr,
+        stableConverter
+    );
+    await createAndInitStrategy(
+        zunamiPool,
+        'UsdtCrvUsdStakeDaoCurve',
+        genericOracleAddr,
+        stableConverter
+    );
 }
 
 main()

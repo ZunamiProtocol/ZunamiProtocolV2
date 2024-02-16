@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.22;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.23;
 
 interface ICurvePoolV1Eth {
     function add_liquidity(uint256[2] calldata amounts, uint256 min_mint_amount) external payable;

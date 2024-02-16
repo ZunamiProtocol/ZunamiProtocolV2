@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.23;
 
 interface IRewardDistributor {
     function distribute(uint256 tid, uint256 amount) external;

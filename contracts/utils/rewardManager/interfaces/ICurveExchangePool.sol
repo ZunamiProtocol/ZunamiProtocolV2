@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.23;
 
 interface ICurveExchangePool {
     function exchange(uint256 i, uint256 j, uint256 input, uint256 min_output) external;

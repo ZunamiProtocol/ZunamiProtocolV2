@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.23;
 
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
@@ -35,8 +35,10 @@ contract StakingRewardDistributor is
     uint256 public constant EXIT_PERCENT = 150; // 15%
     uint256 public constant PERCENT_DENOMINATOR = 1e3;
 
-    uint256 public constant BLOCKS_IN_2_WEEKS = (14 * 24 * 60 * 60) / 12; //TODO: decide where replace with variable
-    uint256 public constant BLOCKS_IN_4_MONTHS = (4 * 30 * 24 * 60 * 60) / 12; //TODO: decide where replace with variable
+    //TODO: decide where replace with variable
+    uint256 public constant BLOCKS_IN_2_WEEKS = (14 * 24 * 60 * 60) / 12;
+    //TODO: decide where replace with variable
+    uint256 public constant BLOCKS_IN_4_MONTHS = (4 * 30 * 24 * 60 * 60) / 12;
 
     // Info of each user per pool.
     struct UserPoolInfo {
@@ -496,7 +498,7 @@ contract StakingRewardDistributor is
         bool _withUpdate
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         if (_pid >= poolInfo.length) revert WrongPoolId();
-        if(_allocPoint == 0) revert WrongAmount();
+        if (_allocPoint == 0) revert WrongAmount();
 
         if (_withUpdate) {
             updateAllPools();

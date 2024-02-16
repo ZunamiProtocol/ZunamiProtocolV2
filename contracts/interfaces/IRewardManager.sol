@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.23;
 
 interface IRewardManager {
     function handle(address reward, uint256 amount, address feeToken) external;

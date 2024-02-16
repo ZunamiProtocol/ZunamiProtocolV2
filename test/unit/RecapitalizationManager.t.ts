@@ -67,7 +67,9 @@ describe('RecapitalizationManager', () => {
         await recapitalizationManager.deployed();
         expect(recapitalizationManager.address).to.properAddress;
 
-        await expect(await recapitalizationManager.distributionBlock()).to.be.equal(currentBlock);
+        await expect(await recapitalizationManager.rewardDistributionBlock()).to.be.equal(
+            currentBlock
+        );
 
         await expect(recapitalizationManager.setRewardTokens([])).to.be.revertedWithCustomError(
             recapitalizationManager,
@@ -126,9 +128,9 @@ describe('RecapitalizationManager', () => {
             await recapitalizationManager.INITIAL_ACCUMULATION_PERIOD()
         );
 
-        const newAccumulationPeriod = (await recapitalizationManager.INITIAL_ACCUMULATION_PERIOD()).add(
-            (14 * 24 * 60 * 60) / 12
-        );
+        const newAccumulationPeriod = (
+            await recapitalizationManager.INITIAL_ACCUMULATION_PERIOD()
+        ).add((14 * 24 * 60 * 60) / 12);
 
         await expect(
             recapitalizationManager.connect(bob).setAccumulationPeriod(newAccumulationPeriod)
@@ -151,7 +153,7 @@ describe('RecapitalizationManager', () => {
     it('should distribute rewards', async () => {
         await expect(
             recapitalizationManager.connect(bob).distributeRewards()
-        ).to.be.revertedWithCustomError(recapitalizationManager, `WrongDistributionBlock`);
+        ).to.be.revertedWithCustomError(recapitalizationManager, `WrongRewardDistributionBlock`);
 
         await mine((await recapitalizationManager.accumulationPeriod()).toNumber());
 
@@ -234,15 +236,17 @@ describe('RecapitalizationManager', () => {
             .setRewardDistributor(stakingRewardDistributor.address);
 
         const zunAmount = tokenify(100);
-        await zun.balanceOf.whenCalledWith(recapitalizationManager.address).returns(zunAmount.toFixed());
+        await zun.balanceOf
+            .whenCalledWith(recapitalizationManager.address)
+            .returns(zunAmount.toFixed());
 
         await zun.approve
             .whenCalledWith(stakingRewardDistributor.address, zunAmount.toFixed())
             .returns(true);
 
         await stakingRewardDistributor.recapitalizedAmounts
-          .whenCalledWith(0)
-          .returns(zunAmount.toFixed());
+            .whenCalledWith(0)
+            .returns(zunAmount.toFixed());
 
         await recapitalizationManager
             .connect(admin)

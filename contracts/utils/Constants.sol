@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.23;
 
 library Constants {
     address internal constant CRVUSD_ADDRESS = 0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E;
@@ -14,9 +14,12 @@ library Constants {
     address internal constant SPELL_ADDRESS = 0x090185f2135308BaD17527004364eBcC2D37e5F6;
     address internal constant SDT_ADDRESS = 0x73968b9a57c6E53d41345FD57a6E6ae27d6CDB2F;
     address internal constant SFRXETH_ADDRESS = 0xac3E018457B222d93114458476f3E3416Abbe38F;
-    address internal constant zunUSD_ADDRESS = address(0); // Will be added after deployment of zunUSD v2 pool
-    address internal constant zunUSD_CONTROLLER_ADDRESS = address(0); // Will be added after deployment of zunUSD v2 pool controller
-    address internal constant zunETH_ADDRESS = address(0); // Will be added after deployment of zunETH v2 pool
+    // Will be added after deployment of zunUSD v2 pool
+    address internal constant zunUSD_ADDRESS = address(0);
+    // Will be added after deployment of zunUSD v2 pool controller
+    address internal constant zunUSD_CONTROLLER_ADDRESS = address(0);
+    // Will be added after deployment of zunETH v2 pool
+    address internal constant zunETH_ADDRESS = address(0);
 
     address public constant CHAINLINK_FEED_REGISTRY_ETH_ADDRESS =
         0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;

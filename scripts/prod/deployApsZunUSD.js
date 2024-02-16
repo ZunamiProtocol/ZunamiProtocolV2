@@ -15,7 +15,9 @@ async function createAndInitStrategy(zunamiPool, stratName, oracle, stableConver
     if (!!stableConverter) {
         result = await strategy.setStableConverter(stableConverter.address);
         await result.wait();
-        console.log(`Set stable converter address ${stableConverter.address} in ${stratName} strategy`);
+        console.log(
+            `Set stable converter address ${stableConverter.address} in ${stratName} strategy`
+        );
     }
 
     // result = await zunamiPool.addStrategy(strategy.address);
@@ -37,14 +39,15 @@ async function main() {
     console.log('ZunamiPoolApsZunUSD:', zunamiPool.address);
 
     console.log('Deploy zunUSD APS pool controller:');
-    const ZunamiPoolController = await ethers.getContractFactory(
-        'ZunamiPoolControllerApsZunUSD'
-    );
+    const ZunamiPoolController = await ethers.getContractFactory('ZunamiPoolControllerApsZunUSD');
     const zunamiPoolController = await ZunamiPoolController.deploy(zunamiPool.address);
     await zunamiPoolController.deployed();
     console.log('ZunamiPoolControllerApsZunUSD:', zunamiPoolController.address);
 
-    let result = await zunamiPool.grantRole(await zunamiPool.CONTROLLER_ROLE(), zunamiPoolController.address);
+    let result = await zunamiPool.grantRole(
+        await zunamiPool.CONTROLLER_ROLE(),
+        zunamiPoolController.address
+    );
     await result.wait();
     console.log(
         'ZunamiPoolController granted CONTROLLER_ROLE:',

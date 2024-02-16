@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.23;
 
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import "../interfaces/IPoolController.sol";
+import '../interfaces/IPoolController.sol';
 
 contract ZunamiDepositZap {
     using SafeERC20 for IERC20;
@@ -17,7 +17,8 @@ contract ZunamiDepositZap {
     IPoolController public apsController;
 
     constructor(address omnipoolControllerAddr, address apsControllerAddr) {
-        if (omnipoolControllerAddr == address(0) || apsControllerAddr == address(0)) revert ZeroAddress();
+        if (omnipoolControllerAddr == address(0) || apsControllerAddr == address(0))
+            revert ZeroAddress();
         if (omnipoolControllerAddr == apsControllerAddr) revert SameAddress();
         omnipoolController = IPoolController(omnipoolControllerAddr);
         apsController = IPoolController(apsControllerAddr);
