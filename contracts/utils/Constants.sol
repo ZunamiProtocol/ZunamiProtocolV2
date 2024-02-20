@@ -17,7 +17,8 @@ library Constants {
     // Will be added after deployment of zunUSD v2 pool
     address internal constant zunUSD_ADDRESS = 0x8C0D76C9B18779665475F3E212D9Ca1Ed6A1A0e6;
     // Will be added after deployment of zunUSD v2 pool controller
-    address internal constant zunUSD_CONTROLLER_ADDRESS = 0x618eee502CDF6b46A2199C21D1411f3F6065c940;
+    address internal constant zunUSD_CONTROLLER_ADDRESS =
+        0x618eee502CDF6b46A2199C21D1411f3F6065c940;
     // Will be added after deployment of zunETH v2 pool
     address internal constant zunETH_ADDRESS = address(0);
 

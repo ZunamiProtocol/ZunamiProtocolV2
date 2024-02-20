@@ -109,6 +109,8 @@ contract StakingRewardDistributor is
         uint256 amountAdjusted
     );
     event EarlyExitReceiverChanged(address receiver);
+    event WithdrawnPoolToken(address token, uint256 amount);
+    event ReturnedPoolToken(address token, uint256 amount);
 
     function initialize() public initializer {
         __UUPSUpgradeable_init();
@@ -246,6 +248,8 @@ contract StakingRewardDistributor is
         if (amount >= totalAmounts[pid] - recapitalizedAmounts[pid]) revert WrongAmount();
         recapitalizedAmounts[pid] += amount;
         poolInfo_.token.safeTransfer(msg.sender, amount);
+
+        emit WithdrawnPoolToken(token, amount);
     }
 
     function returnPoolToken(
@@ -257,6 +261,8 @@ contract StakingRewardDistributor is
         if (amount > recapitalizedAmounts[pid]) revert WrongAmount();
         recapitalizedAmounts[pid] -= amount;
         poolInfo_.token.safeTransferFrom(msg.sender, address(this), amount);
+
+        emit ReturnedPoolToken(token, amount);
     }
 
     // Start 2 week per block distribution for stakers

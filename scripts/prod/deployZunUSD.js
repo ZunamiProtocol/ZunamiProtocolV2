@@ -37,7 +37,9 @@ async function main() {
     console.log('Deploy StableConverter:');
     const StableConverterFactory = await ethers.getContractFactory('StableConverter');
     // const stableConverter = await StableConverterFactory.deploy();
-    const stableConverter = await StableConverterFactory.attach("0x0236B7A3996d8c3597173aA95fD2a915c7A8A42E");
+    const stableConverter = await StableConverterFactory.attach(
+        '0x0236B7A3996d8c3597173aA95fD2a915c7A8A42E'
+    );
     // await stableConverter.deployed();
     console.log('StableConverter:', stableConverter.address);
 

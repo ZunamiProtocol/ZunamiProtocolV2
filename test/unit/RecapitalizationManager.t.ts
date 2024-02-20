@@ -250,7 +250,7 @@ describe('RecapitalizationManager', () => {
 
         await recapitalizationManager
             .connect(admin)
-            .capitalizeStakedZunByRewards(rewardManager.address);
+            .restoreStakedZunByRewards(rewardManager.address);
 
         stakingRewardDistributor.returnPoolToken
             .atCall(0)

@@ -25,14 +25,14 @@ contract RecapitalizationManager is AccessControl, RewardTokenManager {
         address rewardManager,
         address pool,
         uint256 sid,
-        uint256 tid,
-        uint256 distributionBlock
+        uint256 tid
     );
-    event CapitalizedStakedZunByRewards(
+    event RestoredStakedZunByRewards(
         uint256 zunReturnTokenAmount,
         address rewardManager,
         uint256 rewardDistributionBlock
     );
+    event WithdrawnStuckToken(address token);
 
     error WrongRewardDistributionBlock(uint256 rewardDistributionBlock, uint256 nowBlock);
     error WrongTid(uint256 tid);
@@ -151,12 +151,11 @@ contract RecapitalizationManager is AccessControl, RewardTokenManager {
             address(rewardManager),
             address(pool),
             sid,
-            tid,
-            rewardDistributionBlock
+            tid
         );
     }
 
-    function capitalizeStakedZunByRewards(
+    function restoreStakedZunByRewards(
         IRewardManager rewardManager
     ) external onlyRole(EMERGENCY_ADMIN_ROLE) {
         _sellRewards(rewardManager, zunToken);
@@ -172,11 +171,20 @@ contract RecapitalizationManager is AccessControl, RewardTokenManager {
 
         rewardDistributionBlock = block.number;
 
-        emit CapitalizedStakedZunByRewards(
+        emit RestoredStakedZunByRewards(
             zunTokenReturnAmount,
             address(rewardManager),
             rewardDistributionBlock
         );
+    }
+
+    function withdrawStuckToken(IERC20 token) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        uint256 balance = token.balanceOf(address(this));
+        if (balance > 0) {
+            token.safeTransfer(msg.sender, balance);
+        }
+
+        emit WithdrawnStuckToken(address(token));
     }
 
     function _depositToken(IPool pool, uint256 sid, uint256 tid, IERC20 depositedToken) internal {
