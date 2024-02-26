@@ -17,7 +17,8 @@ contract RecapitalizationManager is AccessControl, RewardTokenManager {
         address pool,
         uint256 sid,
         uint256 tid,
-        uint256 rewardDistributionBlock
+        uint256 rewardDistributionBlock,
+        uint256[] rewardAmounts
     );
     event DistributedRewards(uint256 rewardDistributionBlock);
     event RecapitalizedPoolByStackedZun(
@@ -111,12 +112,13 @@ contract RecapitalizationManager is AccessControl, RewardTokenManager {
         IRewardManager rewardManager,
         IPool pool,
         uint256 sid,
-        uint256 tid
+        uint256 tid,
+        uint256[] memory rewardAmounts
     ) external onlyRole(EMERGENCY_ADMIN_ROLE) {
         IERC20 depositedToken = pool.token(tid);
         if (address(depositedToken) == address(0)) revert WrongTid(tid);
 
-        _sellRewards(rewardManager, depositedToken);
+        _sellRewards(rewardManager, depositedToken, rewardAmounts);
 
         _depositToken(pool, sid, tid, depositedToken);
 
@@ -127,7 +129,8 @@ contract RecapitalizationManager is AccessControl, RewardTokenManager {
             address(pool),
             sid,
             tid,
-            rewardDistributionBlock
+            rewardDistributionBlock,
+            rewardAmounts
         );
     }
 

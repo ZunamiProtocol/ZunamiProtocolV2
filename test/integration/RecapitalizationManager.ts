@@ -480,13 +480,15 @@ describe('Recapitalization Manager', async () => {
                     poolFeeToken.address
                 )
             );
+            const expectedRewardAmounts = [expectedCRV, 0, 0, expectedSDT, 0];
 
             // when
             const tx = await recapitalizationManager.recapitalizePoolByRewards(
                 sellingCurveRewardManager.address,
                 zunUSD.address,
                 sid,
-                tid
+                tid,
+                expectedRewardAmounts
             );
 
             // then
@@ -497,7 +499,8 @@ describe('Recapitalization Manager', async () => {
                     zunUSD.address,
                     sid,
                     tid,
-                    tx.blockNumber
+                    tx.blockNumber,
+                    expectedRewardAmounts
                 );
             // check that transfer to strategy is near the evaluated value because of slippage during rewards selling
             await expect(tx)
@@ -508,6 +511,72 @@ describe('Recapitalization Manager', async () => {
                         .abs()
                         .lte(BigNumber.from('100000000000000'))
                 );
+        });
+        it('Should not recapitalize pool by rewards because wrong amounts length', async () => {
+            // given
+            const { recapitalizationManager, CRV, SDT } = await loadFixture(deployFixture);
+            // deploy zunUSD
+            const { zunUSD, zunUSDController } = await deployZunUSDPoolWithStrategies();
+            await zunUSDController.changeRewardCollector(recapitalizationManager.address);
+            // grant controller role for recapitalization manager
+            await zunUSD.grantRole(await zunUSD.CONTROLLER_ROLE(), recapitalizationManager.address);
+            // deploy SellingCurveRewardManager
+            const sellingCurveRewardManager = await deploySellingCurveRewardManager();
+            // claim zunUSD strategies rewards
+            await mine((await recapitalizationManager.accumulationPeriod()).toNumber());
+            await zunUSDController.claimRewards();
+
+            const expectedRewardAmounts = [0];
+
+            const tid = 0;
+            const sid = 0;
+
+            // when
+            const tx = recapitalizationManager.recapitalizePoolByRewards(
+                sellingCurveRewardManager.address,
+                zunUSD.address,
+                sid,
+                tid,
+                expectedRewardAmounts
+            );
+
+            // then
+            await expect(tx)
+                .to.revertedWithCustomError(recapitalizationManager, 'WrongRewardTokensLength')
+                .withArgs(5);
+        });
+
+        it('Should not recapitalize pool by rewards because not enough amount of token', async () => {
+            // given
+            const { recapitalizationManager, CRV, SDT, CVX } = await loadFixture(deployFixture);
+            // deploy zunUSD
+            const { zunUSD, zunUSDController } = await deployZunUSDPoolWithStrategies();
+            await zunUSDController.changeRewardCollector(recapitalizationManager.address);
+            // grant controller role for recapitalization manager
+            await zunUSD.grantRole(await zunUSD.CONTROLLER_ROLE(), recapitalizationManager.address);
+            // deploy SellingCurveRewardManager
+            const sellingCurveRewardManager = await deploySellingCurveRewardManager();
+            // claim zunUSD strategies rewards
+            await mine((await recapitalizationManager.accumulationPeriod()).toNumber());
+            await zunUSDController.claimRewards();
+
+            const expectedCRV = await CRV.balanceOf(recapitalizationManager.address);
+            const expectedSDT = await SDT.balanceOf(recapitalizationManager.address);
+            const tid = 0;
+            const sid = 0;
+            const expectedRewardAmounts = [expectedCRV, 1, 0, expectedSDT, 0];
+
+            // when
+            const tx = recapitalizationManager.recapitalizePoolByRewards(
+                sellingCurveRewardManager.address,
+                zunUSD.address,
+                sid,
+                tid,
+                expectedRewardAmounts
+            );
+
+            // then
+            await expect(tx).to.revertedWith('ERC20: transfer amount exceeds balance');
         });
     });
 

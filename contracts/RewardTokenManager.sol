@@ -9,6 +9,7 @@ abstract contract RewardTokenManager {
     using SafeERC20 for IERC20;
 
     error WrongRewardTokens(IERC20[] rewardTokens);
+    error WrongRewardTokensLength(uint256 length);
     error ZeroRewardManager();
     error ZeroTokenAddress(uint256 index);
 
@@ -54,6 +55,27 @@ abstract contract RewardTokenManager {
             if (rewardBalances[i] == 0) continue;
             rewardToken_ = rewardTokens[i];
             _sellToken(rewardManager, rewardToken_, rewardBalances[i], address(feeToken));
+        }
+
+        return feeToken.balanceOf(address(this)) - feeTokenBalanceBefore;
+    }
+
+    function _sellRewards(
+        IRewardManager rewardManager,
+        IERC20 feeToken,
+        uint256[] memory rewardAmounts
+    ) internal returns (uint256) {
+        if (address(rewardManager) == address(0)) revert ZeroRewardManager();
+        uint256 rewardsLength_ = rewardTokens.length;
+        if (rewardsLength_ != rewardAmounts.length) revert WrongRewardTokensLength(rewardsLength_);
+
+        uint256 feeTokenBalanceBefore = feeToken.balanceOf(address(this));
+
+        IERC20 rewardToken_;
+        for (uint256 i = 0; i < rewardsLength_; i++) {
+            if (rewardAmounts[i] == 0) continue;
+            rewardToken_ = rewardTokens[i];
+            _sellToken(rewardManager, rewardToken_, rewardAmounts[i], address(feeToken));
         }
 
         return feeToken.balanceOf(address(this)) - feeTokenBalanceBefore;

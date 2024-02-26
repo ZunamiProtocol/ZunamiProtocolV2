@@ -173,7 +173,13 @@ describe('RecapitalizationManager', () => {
         await expect(
             recapitalizationManager
                 .connect(admin)
-                .recapitalizePoolByRewards(rewardManager.address, zunamiPool.address, sid, tid)
+                .recapitalizePoolByRewards(
+                    rewardManager.address,
+                    zunamiPool.address,
+                    sid,
+                    tid,
+                    [0, 0, 0]
+                )
         ).to.be.revertedWithCustomError(recapitalizationManager, `WrongTid`);
 
         await zunamiPool.token.whenCalledWith(tid).returns(poolToken.address);
@@ -181,7 +187,13 @@ describe('RecapitalizationManager', () => {
         await poolToken.transfer.whenCalledWith(zunamiPool.address, amount.toFixed()).returns(true);
         await recapitalizationManager
             .connect(admin)
-            .recapitalizePoolByRewards(rewardManager.address, zunamiPool.address, sid, tid);
+            .recapitalizePoolByRewards(
+                rewardManager.address,
+                zunamiPool.address,
+                sid,
+                tid,
+                [0, 0, 0]
+            );
 
         zunamiPool.depositStrategy
             .atCall(0)
