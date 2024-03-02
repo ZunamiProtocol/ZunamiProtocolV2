@@ -867,7 +867,35 @@ describe('StakingRewardDistributor tests', () => {
         expect(adminBalanceWETHBefore).to.eq(initalAdminBalance.sub(amount));
 
         await WETH.connect(users[0]).transfer(stakingRewardDistributor.address, amount);
-        await stakingRewardDistributor.withdrawStuckToken(WETH.address);
+        await stakingRewardDistributor.withdrawStuckToken(WETH.address, amount);
+
+        // check balances after
+        const adminBalanceWETHAfter = await WETH.balanceOf(admin.address);
+        expect(adminBalanceWETHBefore).to.eq(adminBalanceWETHAfter.sub(amount));
+        expect(adminBalanceWETHAfter).to.eq(initalAdminBalance);
+    });
+
+    it('withdraw all stuck tokens', async () => {
+        const { stakingRewardDistributor, users, admin } = await loadFixture(deployFixture);
+
+        // deploy test ERC20 token
+        const ERC20TokenFactory = await ethers.getContractFactory('ERC20Token');
+        const WETH = (await ERC20TokenFactory.deploy(18)) as ERC20;
+        const initalAdminBalance = await WETH.balanceOf(admin.address);
+
+        // user has 100 WETH
+        const amount = ethUnits(100);
+        await WETH.transfer(users[0].address, amount);
+
+        // check balances before
+        const adminBalanceWETHBefore = await WETH.balanceOf(admin.address);
+        expect(adminBalanceWETHBefore).to.eq(initalAdminBalance.sub(amount));
+
+        await WETH.connect(users[0]).transfer(stakingRewardDistributor.address, amount);
+        await stakingRewardDistributor.withdrawStuckToken(
+            WETH.address,
+            ethers.constants.MaxUint256
+        );
 
         // check balances after
         const adminBalanceWETHAfter = await WETH.balanceOf(admin.address);

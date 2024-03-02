@@ -1159,7 +1159,7 @@ describe('Recapitalization Manager', async () => {
     });
 
     describe('Withdraw stuck token', async () => {
-        it('Should withdraw stuck token', async () => {
+        it('Should withdraw all stuck token', async () => {
             // given
             const { owner, recapitalizationManager, CRV } = await loadFixture(deployFixture);
             // provide new rewards to recapitalization manager
@@ -1169,18 +1169,50 @@ describe('Recapitalization Manager', async () => {
                 recapitalizationManager.address,
                 parseEther('100')
             );
+            const expectedWithdrawAmount = await CRV.balanceOf(recapitalizationManager.address);
 
             // when
-            const tx = await recapitalizationManager.withdrawStuckToken(addresses.crypto.crv);
+            const tx = await recapitalizationManager.withdrawStuckToken(
+                addresses.crypto.crv,
+                ethers.constants.MaxUint256
+            );
 
             // then
             await expect(tx)
                 .to.emit(recapitalizationManager, 'WithdrawnStuckToken')
-                .withArgs(addresses.crypto.crv);
+                .withArgs(addresses.crypto.crv, expectedWithdrawAmount);
             await expect(tx).to.changeTokenBalances(
                 CRV,
                 [recapitalizationManager.address, owner.address],
-                [parseEther('100').mul(-1), parseEther('100')]
+                [expectedWithdrawAmount.mul(-1), expectedWithdrawAmount]
+            );
+        });
+        it('Should withdraw part of stuck token', async () => {
+            // given
+            const { owner, recapitalizationManager, CRV } = await loadFixture(deployFixture);
+            // provide new rewards to recapitalization manager
+            await provideLiquidity(
+                addresses.crypto.crv,
+                CRV_SPONSOR,
+                recapitalizationManager.address,
+                parseEther('100')
+            );
+            const expectedWithdrawAmount = parseEther('50');
+
+            // when
+            const tx = await recapitalizationManager.withdrawStuckToken(
+                addresses.crypto.crv,
+                expectedWithdrawAmount
+            );
+
+            // then
+            await expect(tx)
+                .to.emit(recapitalizationManager, 'WithdrawnStuckToken')
+                .withArgs(addresses.crypto.crv, expectedWithdrawAmount);
+            await expect(tx).to.changeTokenBalances(
+                CRV,
+                [recapitalizationManager.address, owner.address],
+                [expectedWithdrawAmount.mul(-1), expectedWithdrawAmount]
             );
         });
         it('Should not withdraw stuck token by not the ADMIN', async () => {
@@ -1197,7 +1229,7 @@ describe('Recapitalization Manager', async () => {
             // when
             const tx = recapitalizationManager
                 .connect(otherAccount)
-                .withdrawStuckToken(addresses.crypto.crv);
+                .withdrawStuckToken(addresses.crypto.crv, parseEther('100'));
 
             // then
             await expect(tx)

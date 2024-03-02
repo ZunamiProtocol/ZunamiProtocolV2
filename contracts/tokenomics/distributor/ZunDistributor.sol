@@ -62,6 +62,8 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
     error InvalidSignature();
     error ExpiredSignature();
     error WrongVotingThreshold();
+    error InvalidGaugeImplementation(address gauge);
+    error GaugeAlreadyExists(address gauge);
 
     modifier afterStart() {
         if (block.number <= START_BLOCK) {
@@ -210,6 +212,9 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
         for (uint256 i; i < gaugesLength_; ++i) {
             Gauge memory gauge = gauges[i];
             amount = (_periodDistributionValue() * gauge.finalizedVotes) / totalVotes;
+            if (amount == 0) {
+                continue;
+            }
             token.safeTransfer(gauge.addr, amount);
             IGauge(gauge.addr).distribute(amount);
             totalDistributed += amount;
@@ -220,7 +225,7 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
 
     function stopDistribution() external onlyOwner whenNotPaused returns (uint256 value) {
         value = token.balanceOf(address(this));
-        token.safeTransfer(owner(), value);
+        token.safeTransfer(msg.sender, value);
         _pause();
         emit DistributionStopped(value);
     }
@@ -229,6 +234,16 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
         if (newGauge == address(0)) {
             revert ZeroAddress();
         }
+        if (newGauge.code.length == 0) {
+            revert InvalidGaugeImplementation(newGauge);
+        }
+
+        for (uint256 i = 0; i < gauges.length; i++) {
+            if (gauges[i].addr == newGauge) {
+                revert GaugeAlreadyExists(newGauge);
+            }
+        }
+
         gauges.push(Gauge(newGauge, 0, 0));
         emit GaugeAdded(newGauge);
     }
@@ -254,10 +269,19 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
         emit VotingThresholdChanged(_threshold);
     }
 
-    function withdrawStuckToken(ERC20 _token) external onlyOwner {
-        uint256 tokenBalance = _token.balanceOf(address(this));
-        if (tokenBalance > 0) {
-            _token.safeTransfer(owner(), tokenBalance);
+    /**
+     * @dev Allows the owner to withdraw stuck tokens from the contract.
+     * @param _token The ERC20 token to withdraw from.
+     * @param _amount The amount of tokens to withdraw. Use type(uint256).max to withdraw all tokens.
+     * @notice Only the owner can withdraw tokens.
+     * @notice If _amount is set to type(uint256).max, it withdraws all tokens held by the contract.
+     */
+    function withdrawStuckToken(ERC20 _token, uint256 _amount) external onlyOwner {
+        uint256 withdrawAmount = _amount == type(uint256).max
+            ? _token.balanceOf(address(this))
+            : _amount;
+        if (withdrawAmount > 0) {
+            _token.safeTransfer(msg.sender, withdrawAmount);
         }
     }
 

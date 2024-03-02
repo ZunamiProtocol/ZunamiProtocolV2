@@ -632,6 +632,37 @@ describe('ZunDistributor tests', () => {
         expect(gaugeItem.finalizedVotes).to.eq(0);
     });
 
+    it('add gauge should revert when address is not a contract', async () => {
+        // given
+        const { voter, approveGauge, transferGauge, addedGauge, distributor, dao } =
+            await loadFixture(deployFixture);
+        expect(await distributor.gaugesLength()).to.eq(3);
+
+        // when
+        const tx = distributor.connect(dao).addGauge(voter.address);
+
+        // then
+        await expect(tx)
+            .to.revertedWithCustomError(distributor, 'InvalidGaugeImplementation')
+            .withArgs(voter.address);
+    });
+
+    it('add gauge should revert when address already exist', async () => {
+        // given
+        const { voter, approveGauge, transferGauge, addedGauge, distributor, dao } =
+            await loadFixture(deployFixture);
+        expect(await distributor.gaugesLength()).to.eq(3);
+        await distributor.connect(dao).addGauge(addedGauge.address);
+
+        // when
+        const tx = distributor.connect(dao).addGauge(addedGauge.address);
+
+        // then
+        await expect(tx)
+            .to.revertedWithCustomError(distributor, 'GaugeAlreadyExists')
+            .withArgs(addedGauge.address);
+    });
+
     it('delete gauge', async () => {
         const { voter, approveGauge, transferGauge, addedGauge, distributor, dao } =
             await loadFixture(deployFixture);
@@ -658,14 +689,30 @@ describe('ZunDistributor tests', () => {
         const { voter, approveGauge, transferGauge, ZUN, vlZUN, distributor, dao } =
             await loadFixture(deployFixture);
 
-        await expect(distributor.withdrawStuckToken(ZUN.address)).to.be.revertedWithCustomError(
-            distributor,
-            'OwnableUnauthorizedAccount'
-        );
+        await expect(
+            distributor.withdrawStuckToken(ZUN.address, parseUnits('32000000', 'ether'))
+        ).to.be.revertedWithCustomError(distributor, 'OwnableUnauthorizedAccount');
 
         expect(await ZUN.balanceOf(dao.address)).to.eq(0);
 
-        await distributor.connect(dao).withdrawStuckToken(ZUN.address);
+        await distributor
+            .connect(dao)
+            .withdrawStuckToken(ZUN.address, parseUnits('32000000', 'ether'));
+
+        expect(await ZUN.balanceOf(dao.address)).to.eq(parseUnits('32000000', 'ether'));
+    });
+
+    it('withdraw all stuck token distributor', async () => {
+        const { voter, approveGauge, transferGauge, ZUN, vlZUN, distributor, dao } =
+            await loadFixture(deployFixture);
+
+        await expect(
+            distributor.withdrawStuckToken(ZUN.address, ethers.constants.MaxUint256)
+        ).to.be.revertedWithCustomError(distributor, 'OwnableUnauthorizedAccount');
+
+        expect(await ZUN.balanceOf(dao.address)).to.eq(0);
+
+        await distributor.connect(dao).withdrawStuckToken(ZUN.address, ethers.constants.MaxUint256);
 
         expect(await ZUN.balanceOf(dao.address)).to.eq(parseUnits('32000000', 'ether'));
     });

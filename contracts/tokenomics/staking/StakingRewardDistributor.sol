@@ -631,10 +631,22 @@ contract StakingRewardDistributor is
         return poolInfo;
     }
 
-    function withdrawStuckToken(IERC20 _token) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        uint256 tokenBalance = _token.balanceOf(address(this));
-        if (tokenBalance > 0) {
-            _token.safeTransfer(_msgSender(), tokenBalance);
+    /**
+     * @dev Allows the owner to withdraw stuck tokens from the contract.
+     * @param _token The IERC20 token to withdraw from.
+     * @param _amount The amount of tokens to withdraw. Use type(uint256).max to withdraw all tokens.
+     * @notice Only the account with the DEFAULT_ADMIN_ROLE can withdraw tokens.
+     * @notice If _amount is set to type(uint256).max, it withdraws all tokens held by the contract.
+     */
+    function withdrawStuckToken(
+        IERC20 _token,
+        uint256 _amount
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        uint256 withdrawAmount = _amount == type(uint256).max
+            ? _token.balanceOf(address(this))
+            : _amount;
+        if (withdrawAmount > 0) {
+            _token.safeTransfer(_msgSender(), withdrawAmount);
         }
     }
 }
