@@ -104,11 +104,13 @@ contract ZUNStakingRewardDistributor is IZUNStakingRewardDistributor, BaseStakin
         bool _claimRewards,
         address _tokenReceiver
     ) external nonReentrant {
-        LockInfo storage lock = userLocks[msg.sender][_lockIndex];
-        uint256 amount = lock.amount;
+        LockInfo[] storage locks = userLocks[msg.sender];
+        if (locks.length <= _lockIndex) revert LockDoesNotExist();
+
+        LockInfo storage lock = locks[_lockIndex];
         uint256 untilBlock = lock.untilBlock;
-        if (amount == 0) revert LockDoesNotExist();
         if (untilBlock == 0) revert Unlocked();
+        uint256 amount = lock.amount;
 
         if (_tokenReceiver == address(0)) {
             _tokenReceiver = msg.sender;

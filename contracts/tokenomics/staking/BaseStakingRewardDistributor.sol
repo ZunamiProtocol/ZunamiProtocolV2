@@ -177,7 +177,7 @@ abstract contract BaseStakingRewardDistributor is
         uint256 totalClaimable = claimableRewards[_tid][_user] + newClaimable;
         if (totalClaimable > 0) {
             if (_claim) {
-                _safeRewardTransfer(token, _receiver, totalClaimable);
+                _safeRewardTransfer(rewardTokenInfo[_tid].token, _receiver, totalClaimable);
                 rewardTokenInfo[_tid].balance -= totalClaimable;
                 // update amount claimed
                 claimedRewards[_tid][_user] += totalClaimable;
