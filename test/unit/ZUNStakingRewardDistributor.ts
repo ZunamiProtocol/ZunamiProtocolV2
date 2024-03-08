@@ -12,6 +12,10 @@ const ethUnits = (amount: number | string) => parseUnits(amount.toString(), 'eth
 
 const BLOCKS_IN_1_DAYS = (24 * 60 * 60) / 12;
 const BLOCKS_IN_4_MONTHS = BLOCKS_IN_1_DAYS * 30 * 4;
+const ACC_REWARD_PRECISION = 1e12;
+const zeroAddress = ethers.constants.AddressZero;
+
+const toBn = (value: number | string) => ethers.BigNumber.from(value);
 
 describe('ZUNStakingRewardDistributor tests', () => {
     async function deployFixture() {
@@ -55,8 +59,8 @@ describe('ZUNStakingRewardDistributor tests', () => {
     }
 
     async function depositByTwoUsersState(
-        depositAmount1: boolean | number | string,
-        depositAmount2: boolean | number | string,
+        depositAmount1: number | string,
+        depositAmount2: number | string,
         fixture: any
     ) {
         const { stakingRewardDistributor, ZUN, REWARD, REWARD2, admin, users } = fixture;
@@ -672,6 +676,105 @@ describe('ZUNStakingRewardDistributor tests', () => {
         expect(await ZUN.balanceOf(users[2].address)).to.eq(ethUnits(0));
         expect(await stakingRewardDistributor.recapitalizedAmount()).to.eq(ethUnits(0));
     });
+
+    it('should revert if early exit receiver is zero address', async () => {
+        const fixture = await loadFixture(deployFixture);
+        const { stakingRewardDistributor } = fixture;
+        await expect(stakingRewardDistributor.setEarlyExitReceiver(zeroAddress))
+            .to.be.revertedWithCustomError(stakingRewardDistributor, 'ZeroAddress');
+    });
+
+    it('should revert if withdraw zero amount', async () => {
+        const fixture = await loadFixture(deployFixture);
+        const depositAmount1 = 1000;
+        const depositAmount2 = 2000;
+        await depositByTwoUsersState(depositAmount1, depositAmount2, fixture);
+        const { stakingRewardDistributor,  users } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.RECAPITALIZATION_ROLE(),
+            users[2].address
+        );
+        await expect(stakingRewardDistributor.connect(users[2]).withdrawToken(0))
+            .to.be.revertedWithCustomError(stakingRewardDistributor, 'ZeroAmount');
+    });
+
+    it('should revert if withdraw wrong amount', async () => {
+        const fixture = await loadFixture(deployFixture);
+        const depositAmount1 = 1000;
+        const depositAmount2 = 2000;
+        await depositByTwoUsersState(depositAmount1, depositAmount2, fixture);
+        const { stakingRewardDistributor,  users } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.RECAPITALIZATION_ROLE(),
+            users[2].address
+        );
+        await expect(stakingRewardDistributor.connect(users[2]).withdrawToken(ethUnits(100000000)))
+            .to.be.revertedWithCustomError(stakingRewardDistributor, 'WrongAmount');
+    });
+
+    it('should revert if return zero tokens', async () => {
+        const fixture = await loadFixture(deployFixture);
+        const depositAmount1 = 1000;
+        const depositAmount2 = 2000;
+        await depositByTwoUsersState(depositAmount1, depositAmount2, fixture);
+        const { stakingRewardDistributor, ZUN, users } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.RECAPITALIZATION_ROLE(),
+            users[2].address
+        );
+        await ZUN.connect(users[2]).approve(
+            stakingRewardDistributor.address,
+            ethUnits(depositAmount2)
+        );
+        await expect(stakingRewardDistributor.connect(users[2]).returnToken(0))
+            .to.be.revertedWithCustomError(stakingRewardDistributor, 'ZeroAmount');
+    });
+
+    it('should revert if return wrong amount tokens', async () => {
+        const fixture = await loadFixture(deployFixture);
+        const depositAmount1 = 1000;
+        const depositAmount2 = 2000;
+        await depositByTwoUsersState(depositAmount1, depositAmount2, fixture);
+        const { stakingRewardDistributor, ZUN, users } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.RECAPITALIZATION_ROLE(),
+            users[2].address
+        );
+        await ZUN.connect(users[2]).approve(
+            stakingRewardDistributor.address,
+            ethUnits(depositAmount2)
+        );
+        await expect(stakingRewardDistributor.connect(users[2]).returnToken(ethUnits(100000000)))
+            .to.be.revertedWithCustomError(stakingRewardDistributor, 'WrongAmount');
+    });
+
+    it('should deposit and withdraw if receiver zero address', async () => {
+        const fixture = await loadFixture(deployFixture);
+
+        const depositAmount1 = 1000;
+        const depositAmount2 = 2000;
+        await depositByTwoUsersState(depositAmount1, depositAmount2, fixture);
+        const { stakingRewardDistributor, ZUN, users, earlyExitReceiver } = fixture;
+
+        await ZUN.transfer(users[0].address, ethUnits(depositAmount1));
+        await ZUN.connect(users[0]).approve(stakingRewardDistributor.address, ethUnits(depositAmount1));
+        await stakingRewardDistributor.connect(users[0]).deposit(ethUnits(depositAmount1), zeroAddress);
+        expect(await stakingRewardDistributor.balanceOf(users[0].address)).to.eq(ethUnits(depositAmount1 * 2));
+
+        const withdrawAmount = ethUnits(depositAmount1);
+        await stakingRewardDistributor
+            .connect(users[0])
+            .approve(stakingRewardDistributor.address, withdrawAmount);
+        await stakingRewardDistributor.connect(users[0]).withdraw(0, false, zeroAddress);
+
+        expect(await ZUN.balanceOf(users[0].address)).to.be.eq(ethUnits(depositAmount1).div(100).mul(85));
+    });
+
+
 
     async function addRewardToken(
         stakingRewardDistributor: ZUNStakingRewardDistributor,
