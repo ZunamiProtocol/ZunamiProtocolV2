@@ -63,7 +63,9 @@ contract ZUNStakingRewardDistributor is IZUNStakingRewardDistributor, BaseStakin
         return ((totalAmount - recapitalizedAmount) * RATION_DENOMINATOR) / totalAmount;
     }
 
-    function _reduceByStakedAmount(uint256 _tokenBalance) internal view override returns (uint256 reducedTokenBalance) {
+    function _reduceByStakedAmount(
+        uint256 _tokenBalance
+    ) internal view override returns (uint256 reducedTokenBalance) {
         reducedTokenBalance = _tokenBalance + recapitalizedAmount - totalAmount;
     }
 
@@ -159,9 +161,9 @@ contract ZUNStakingRewardDistributor is IZUNStakingRewardDistributor, BaseStakin
         totalAmount -= amount;
 
         uint256 amountReduced = amount;
-        if(ratio < RATION_DENOMINATOR) {
+        if (ratio < RATION_DENOMINATOR) {
             amountReduced = (amount * ratio) / RATION_DENOMINATOR;
-            if(amount - amountReduced > recapitalizedAmount) {
+            if (amount - amountReduced > recapitalizedAmount) {
                 recapitalizedAmount = 0;
             } else {
                 recapitalizedAmount -= (amount - amountReduced);

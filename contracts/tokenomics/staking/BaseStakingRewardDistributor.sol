@@ -147,7 +147,9 @@ abstract contract BaseStakingRewardDistributor is
         }
     }
 
-    function _reduceByStakedAmount(uint256 _tokenBalance) internal view virtual returns (uint256 reducedTokenBalance) {
+    function _reduceByStakedAmount(
+        uint256 _tokenBalance
+    ) internal view virtual returns (uint256 reducedTokenBalance) {
         reducedTokenBalance = _tokenBalance - totalAmount;
     }
 
