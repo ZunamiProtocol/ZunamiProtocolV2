@@ -578,7 +578,7 @@ describe('StakingRewardDistributor tests', () => {
         expect(adminBalanceWETHAfter).to.eq(initalAdminBalance);
     });
 
-    it('should distribute POOLTOKEN tokens', async () => {
+    it('should distribute reward tokens', async () => {
         const fixture = await loadFixture(deployFixture);
 
         const depositAmount1 = 1000;
@@ -704,6 +704,38 @@ describe('StakingRewardDistributor tests', () => {
         expect(rewardBalanceAfter3.sub(rewardBalanceBefore3)).to.be.eq(distributionAmount2.div(5));
         expect(rewardBalanceAfter4.sub(rewardBalanceBefore4)).to.be.eq(
             distributionAmount2.div(5).mul(4)
+        );
+    });
+
+    it('should distribute rewards if reward is POOLTOKEN', async () => {
+        const fixture = await loadFixture(deployFixture);
+
+        const depositAmount1 = 1000;
+        const depositAmount2 = 3000;
+        await depositByTwoUsersState(depositAmount1, depositAmount2, fixture);
+        const { stakingRewardDistributor, POOLTOKEN, users, admin } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.DISTRIBUTOR_ROLE(),
+            admin.address
+        );
+        await stakingRewardDistributor.addRewardToken(POOLTOKEN.address);
+
+        const balanceBefore = await POOLTOKEN.balanceOf(stakingRewardDistributor.address);
+        const distributionAmount = 100000;
+        await POOLTOKEN.approve(stakingRewardDistributor.address, ethUnits(distributionAmount));
+        await stakingRewardDistributor.distribute(POOLTOKEN.address, ethUnits(distributionAmount));
+        const balanceAfter = await POOLTOKEN.balanceOf(stakingRewardDistributor.address);
+        expect(balanceAfter.sub(balanceBefore)).to.eq(ethUnits(distributionAmount));
+
+        await stakingRewardDistributor.connect(users[0]).claim(users[0].address);
+        await stakingRewardDistributor.connect(users[1]).claim(users[1].address);
+
+        expect(await POOLTOKEN.balanceOf(users[0].address)).to.be.eq(
+            ethUnits(distributionAmount).div(4)
+        );
+        expect(await POOLTOKEN.balanceOf(users[1].address)).to.be.eq(
+            ethUnits(distributionAmount).div(4).mul(3)
         );
     });
 
@@ -912,5 +944,146 @@ describe('StakingRewardDistributor tests', () => {
             .connect(bob)
             .approve(stakingRewardDistributor.address, depositAmount);
         await stakingRewardDistributor.connect(bob).withdraw(0, false, zeroAddress);
+    });
+
+    it("shoudn't add reward token if zero address", async function () {
+        const { stakingRewardDistributor } = await loadFixture(deployFixture);
+
+        await expect(
+            stakingRewardDistributor.addRewardToken(zeroAddress)
+        ).to.be.revertedWithCustomError(stakingRewardDistributor, 'ZeroAddress');
+    });
+
+    it("shoudn't add reward token if zero address", async function () {
+        const { stakingRewardDistributor, REWARD } = await loadFixture(deployFixture);
+
+        await stakingRewardDistributor.addRewardToken(REWARD.address);
+        await expect(
+            stakingRewardDistributor.addRewardToken(REWARD.address)
+        ).to.be.revertedWithCustomError(stakingRewardDistributor, 'TokenAlreadyAdded');
+    });
+
+    it("shoudn't distribute if total amount zero", async function () {
+        const fixture = await loadFixture(deployFixture);
+
+        const { stakingRewardDistributor, admin, REWARD, users } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.DISTRIBUTOR_ROLE(),
+            admin.address
+        );
+
+        const firstDistributionAmount1 = ethUnits('1000000');
+        await REWARD.approve(stakingRewardDistributor.address, firstDistributionAmount1);
+        await expect(
+            stakingRewardDistributor.distribute(REWARD.address, firstDistributionAmount1)
+        ).to.be.revertedWithCustomError(stakingRewardDistributor, 'ZeroSupply');
+    });
+
+    it("shoudn't distribute if amount zero", async function () {
+        const fixture = await loadFixture(deployFixture);
+        const depositAmount1 = 1000;
+        const depositAmount2 = 2000;
+        const { tid1, tid2 } = await depositByTwoUsersState(
+            depositAmount1,
+            depositAmount2,
+            fixture
+        );
+        const { stakingRewardDistributor, admin, REWARD, users } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.DISTRIBUTOR_ROLE(),
+            admin.address
+        );
+
+        const firstDistributionAmount1 = ethUnits('1000000');
+        await REWARD.approve(stakingRewardDistributor.address, firstDistributionAmount1);
+        await expect(
+            stakingRewardDistributor.distribute(REWARD.address, 0)
+        ).to.be.revertedWithCustomError(stakingRewardDistributor, 'ZeroAmount');
+    });
+
+    it("shoudn't distribute if zero token address", async function () {
+        const fixture = await loadFixture(deployFixture);
+        const depositAmount1 = 1000;
+        const depositAmount2 = 2000;
+        const { tid1, tid2 } = await depositByTwoUsersState(
+            depositAmount1,
+            depositAmount2,
+            fixture
+        );
+        const { stakingRewardDistributor, admin, REWARD, users } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.DISTRIBUTOR_ROLE(),
+            admin.address
+        );
+
+        const firstDistributionAmount1 = ethUnits('1000000');
+        await REWARD.approve(stakingRewardDistributor.address, firstDistributionAmount1);
+        await expect(
+            stakingRewardDistributor.distribute(zeroAddress, firstDistributionAmount1)
+        ).to.be.revertedWithCustomError(stakingRewardDistributor, 'ZeroAddress');
+    });
+
+    it("shoudn't distribute if wrong token address", async function () {
+        const fixture = await loadFixture(deployFixture);
+        const depositAmount1 = 1000;
+        const depositAmount2 = 2000;
+        const { tid1, tid2 } = await depositByTwoUsersState(
+            depositAmount1,
+            depositAmount2,
+            fixture
+        );
+        const { stakingRewardDistributor, admin, REWARD, POOLTOKEN } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.DISTRIBUTOR_ROLE(),
+            admin.address
+        );
+
+        const firstDistributionAmount1 = ethUnits('1000000');
+        await REWARD.approve(stakingRewardDistributor.address, firstDistributionAmount1);
+        await expect(
+            stakingRewardDistributor.distribute(POOLTOKEN.address, firstDistributionAmount1)
+        ).to.be.revertedWithCustomError(stakingRewardDistributor, 'AbsentRewardToken');
+    });
+
+    it("shoud withdraw stuck token", async function () {
+        const fixture = await loadFixture(deployFixture);
+        const { stakingRewardDistributor, admin, REWARD, POOLTOKEN } = fixture;
+
+        const ERC20TokenFactory = await ethers.getContractFactory('ERC20Token');
+        const stuckToken = (await ERC20TokenFactory.deploy(18)) as ERC20;
+
+        const amount = 1000;
+        await stuckToken.transfer(stakingRewardDistributor.address, ethUnits(amount));
+        
+        let balanceBefore = await stuckToken.balanceOf(admin.address);
+        await stakingRewardDistributor.withdrawStuckToken(stuckToken.address, ethUnits(amount / 2));
+        let balanceAfter = await stuckToken.balanceOf(admin.address);
+        expect(balanceAfter.sub(balanceBefore)).to.be.eq(ethUnits(amount / 2));
+
+        balanceBefore = await stuckToken.balanceOf(admin.address);
+        await stakingRewardDistributor.withdrawStuckToken(stuckToken.address, ethers.constants.MaxUint256);
+        balanceAfter = await stuckToken.balanceOf(admin.address);
+        expect(balanceAfter.sub(balanceBefore)).to.be.eq(ethUnits(amount / 2));
+    });
+
+    it("shoudn't withdraw stuck token if zero amount", async function () {
+        const fixture = await loadFixture(deployFixture);
+        const { stakingRewardDistributor, admin, REWARD, POOLTOKEN } = fixture;
+
+        const ERC20TokenFactory = await ethers.getContractFactory('ERC20Token');
+        const stuckToken = (await ERC20TokenFactory.deploy(18)) as ERC20;
+
+        const amount = 1000;
+        await stuckToken.transfer(stakingRewardDistributor.address, ethUnits(amount));
+
+        let balanceBefore = await stuckToken.balanceOf(admin.address);
+        await stakingRewardDistributor.withdrawStuckToken(stuckToken.address, 0);
+        let balanceAfter = await stuckToken.balanceOf(admin.address);
+        expect(balanceAfter.sub(balanceBefore)).to.be.eq(0);
+
     });
 });

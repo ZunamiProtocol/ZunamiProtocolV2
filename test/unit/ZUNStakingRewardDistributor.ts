@@ -1007,6 +1007,36 @@ describe('ZUNStakingRewardDistributor tests', () => {
         );
     });
 
+    it('should distribute rewards if reward is ZUN', async () => {
+        const fixture = await loadFixture(deployFixture);
+
+        const depositAmount1 = 1000;
+        const depositAmount2 = 3000;
+        await depositByTwoUsersState(depositAmount1, depositAmount2, fixture);
+        const { stakingRewardDistributor, ZUN, users, admin } = fixture;
+
+        await stakingRewardDistributor.grantRole(
+            await stakingRewardDistributor.DISTRIBUTOR_ROLE(),
+            admin.address
+        );
+        await stakingRewardDistributor.addRewardToken(ZUN.address);
+
+        const balanceBefore = await ZUN.balanceOf(stakingRewardDistributor.address);
+        const distributionAmount = 100000;
+        await ZUN.approve(stakingRewardDistributor.address, ethUnits(distributionAmount));
+        await stakingRewardDistributor.distribute(ZUN.address, ethUnits(distributionAmount));
+        const balanceAfter = await ZUN.balanceOf(stakingRewardDistributor.address);
+        expect(balanceAfter.sub(balanceBefore)).to.eq(ethUnits(distributionAmount));
+
+        await stakingRewardDistributor.connect(users[0]).claim(users[0].address);
+        await stakingRewardDistributor.connect(users[1]).claim(users[1].address);
+
+        expect(await ZUN.balanceOf(users[0].address)).to.be.eq(ethUnits(distributionAmount).div(4));
+        expect(await ZUN.balanceOf(users[1].address)).to.be.eq(
+            ethUnits(distributionAmount).div(4).mul(3)
+        );
+    });
+
     async function addRewardToken(
         stakingRewardDistributor: ZUNStakingRewardDistributor,
         rewardToken: string

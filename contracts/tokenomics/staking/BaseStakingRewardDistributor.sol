@@ -18,9 +18,7 @@ import { IDistributor } from './IDistributor.sol';
 abstract contract BaseStakingRewardDistributor is
     IDistributor,
     Initializable,
-    ERC20Upgradeable,
     ERC20PermitUpgradeable,
-    ERC20VotesUpgradeable,
     AccessControlUpgradeable,
     UUPSUpgradeable,
     ReentrancyGuardUpgradeable
@@ -81,13 +79,12 @@ abstract contract BaseStakingRewardDistributor is
         string memory _name,
         string memory _symbol,
         address _defaultAdmin
-    ) public initializer {
+    ) public virtual initializer {
         if (_token == address(0)) revert ZeroAddress();
         if (_defaultAdmin == address(0)) revert ZeroAddress();
 
         __ERC20_init(_name, _symbol);
         __ERC20Permit_init(_name);
-        __ERC20Votes_init();
         __AccessControl_init();
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
@@ -280,40 +277,5 @@ abstract contract BaseStakingRewardDistributor is
         if (withdrawAmount > 0) {
             _token.safeTransfer(_msgSender(), withdrawAmount);
         }
-    }
-
-    // ERC20 overrides
-    function transfer(
-        address recipient,
-        uint256 amount
-    ) public override nonReentrant returns (bool) {
-        return super.transfer(recipient, amount);
-    }
-
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) public override nonReentrant returns (bool) {
-        return super.transferFrom(sender, recipient, amount);
-    }
-
-    function _update(
-        address from,
-        address to,
-        uint256 value
-    ) internal override(ERC20Upgradeable, ERC20VotesUpgradeable) {
-        if (value > 0) {
-            uint256 totalSupply = totalSupply();
-            _checkpointRewards(from, totalSupply, false, address(0));
-            _checkpointRewards(to, totalSupply, false, address(0));
-        }
-        super._update(from, to, value);
-    }
-
-    function nonces(
-        address owner
-    ) public view override(ERC20PermitUpgradeable, NoncesUpgradeable) returns (uint256) {
-        return super.nonces(owner);
     }
 }

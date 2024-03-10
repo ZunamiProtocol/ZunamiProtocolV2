@@ -8,7 +8,8 @@ import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol';
 import './BaseStakingRewardDistributor.sol';
 import './IZUNStakingRewardDistributor.sol';
 
-contract ZUNStakingRewardDistributor is IZUNStakingRewardDistributor, BaseStakingRewardDistributor {
+
+contract ZUNStakingRewardDistributor is IZUNStakingRewardDistributor, BaseStakingRewardDistributor, ERC20VotesUpgradeable {
     using SafeERC20 for IERC20;
 
     error LockDoesNotExist();
@@ -26,6 +27,16 @@ contract ZUNStakingRewardDistributor is IZUNStakingRewardDistributor, BaseStakin
     struct LockInfo {
         uint128 amount;
         uint128 untilBlock;
+    }
+
+    function initialize(
+        address _token,
+        string memory _name,
+        string memory _symbol,
+        address _defaultAdmin
+    ) public override initializer {
+        super.initialize(_token, _name, _symbol, _defaultAdmin);
+        __ERC20Votes_init();
     }
 
     mapping(address => LockInfo[]) public userLocks;
@@ -184,5 +195,24 @@ contract ZUNStakingRewardDistributor is IZUNStakingRewardDistributor, BaseStakin
         token.safeTransfer(address(_tokenReceiver), transferredAmount);
 
         emit Withdrawn(msg.sender, _lockIndex, amount, amountReduced, transferredAmount);
+    }
+
+    function _update(
+        address from,
+        address to,
+        uint256 value
+    ) internal override(ERC20Upgradeable, ERC20VotesUpgradeable) {
+        if (value > 0) {
+            uint256 totalSupply = totalSupply();
+            _checkpointRewards(from, totalSupply, false, address(0));
+            _checkpointRewards(to, totalSupply, false, address(0));
+        }
+        super._update(from, to, value);
+    }
+
+    function nonces(
+        address owner
+    ) public view override(ERC20PermitUpgradeable, NoncesUpgradeable) returns (uint256) {
+        return super.nonces(owner);
     }
 }
