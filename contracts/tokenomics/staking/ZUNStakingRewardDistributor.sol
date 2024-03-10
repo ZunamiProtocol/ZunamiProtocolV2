@@ -8,8 +8,11 @@ import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol';
 import './BaseStakingRewardDistributor.sol';
 import './IZUNStakingRewardDistributor.sol';
 
-
-contract ZUNStakingRewardDistributor is IZUNStakingRewardDistributor, BaseStakingRewardDistributor, ERC20VotesUpgradeable {
+contract ZUNStakingRewardDistributor is
+    IZUNStakingRewardDistributor,
+    BaseStakingRewardDistributor,
+    ERC20VotesUpgradeable
+{
     using SafeERC20 for IERC20;
 
     error LockDoesNotExist();

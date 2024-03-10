@@ -1049,7 +1049,7 @@ describe('StakingRewardDistributor tests', () => {
         ).to.be.revertedWithCustomError(stakingRewardDistributor, 'AbsentRewardToken');
     });
 
-    it("shoud withdraw stuck token", async function () {
+    it('shoud withdraw stuck token', async function () {
         const fixture = await loadFixture(deployFixture);
         const { stakingRewardDistributor, admin, REWARD, POOLTOKEN } = fixture;
 
@@ -1058,14 +1058,17 @@ describe('StakingRewardDistributor tests', () => {
 
         const amount = 1000;
         await stuckToken.transfer(stakingRewardDistributor.address, ethUnits(amount));
-        
+
         let balanceBefore = await stuckToken.balanceOf(admin.address);
         await stakingRewardDistributor.withdrawStuckToken(stuckToken.address, ethUnits(amount / 2));
         let balanceAfter = await stuckToken.balanceOf(admin.address);
         expect(balanceAfter.sub(balanceBefore)).to.be.eq(ethUnits(amount / 2));
 
         balanceBefore = await stuckToken.balanceOf(admin.address);
-        await stakingRewardDistributor.withdrawStuckToken(stuckToken.address, ethers.constants.MaxUint256);
+        await stakingRewardDistributor.withdrawStuckToken(
+            stuckToken.address,
+            ethers.constants.MaxUint256
+        );
         balanceAfter = await stuckToken.balanceOf(admin.address);
         expect(balanceAfter.sub(balanceBefore)).to.be.eq(ethUnits(amount / 2));
     });
@@ -1084,6 +1087,5 @@ describe('StakingRewardDistributor tests', () => {
         await stakingRewardDistributor.withdrawStuckToken(stuckToken.address, 0);
         let balanceAfter = await stuckToken.balanceOf(admin.address);
         expect(balanceAfter.sub(balanceBefore)).to.be.eq(0);
-
     });
 });
