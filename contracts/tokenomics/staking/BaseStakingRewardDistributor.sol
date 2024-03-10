@@ -278,4 +278,38 @@ abstract contract BaseStakingRewardDistributor is
             _token.safeTransfer(_msgSender(), withdrawAmount);
         }
     }
+
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) public virtual override nonReentrant returns (bool) {
+        return super.transfer(recipient, amount);
+    }
+
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) public virtual override nonReentrant returns (bool) {
+        return super.transferFrom(sender, recipient, amount);
+    }
+
+    function _update(
+        address from,
+        address to,
+        uint256 value
+    ) internal virtual override(ERC20Upgradeable) {
+        if (value > 0) {
+            uint256 totalSupply = totalSupply();
+            _checkpointRewards(from, totalSupply, false, address(0));
+            _checkpointRewards(to, totalSupply, false, address(0));
+        }
+        super._update(from, to, value);
+    }
+
+    function nonces(
+        address owner
+    ) public view virtual override(ERC20PermitUpgradeable) returns (uint256) {
+        return super.nonces(owner);
+    }
 }

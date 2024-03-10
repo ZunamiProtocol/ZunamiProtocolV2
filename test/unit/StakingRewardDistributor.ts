@@ -1088,4 +1088,55 @@ describe('StakingRewardDistributor tests', () => {
         let balanceAfter = await stuckToken.balanceOf(admin.address);
         expect(balanceAfter.sub(balanceBefore)).to.be.eq(0);
     });
+
+    it('should distribute reward token if user send some LP to another', async () => {
+        const fixture = await loadFixture(deployFixture);
+
+        const depositAmount1 = 1000;
+        const { tid1, tid2 } = await depositByTwoUsersState(depositAmount1, 0, fixture);
+        const { stakingRewardDistributor, POOLTOKEN, REWARD, REWARD2, users, earlyExitReceiver } =
+            fixture;
+
+        const distributionAmount = ethUnits('3000000');
+        const distributionAmount2 = ethUnits('30000');
+
+        await REWARD.approve(stakingRewardDistributor.address, distributionAmount.div(3));
+        await stakingRewardDistributor.distribute(REWARD.address, distributionAmount.div(3));
+        await REWARD2.approve(stakingRewardDistributor.address, distributionAmount2.div(3));
+        await stakingRewardDistributor.distribute(REWARD2.address, distributionAmount2.div(3));
+
+        await stakingRewardDistributor
+            .connect(users[0])
+            .transfer(users[1].address, ethUnits(depositAmount1));
+
+        await REWARD.approve(stakingRewardDistributor.address, distributionAmount.div(3));
+        await stakingRewardDistributor.distribute(REWARD.address, distributionAmount.div(3));
+        await REWARD2.approve(stakingRewardDistributor.address, distributionAmount2.div(3));
+        await stakingRewardDistributor.distribute(REWARD2.address, distributionAmount2.div(3));
+
+        await stakingRewardDistributor.connect(users[0]).claim(users[0].address);
+        await stakingRewardDistributor.connect(users[1]).claim(users[1].address);
+
+        expect(await REWARD.balanceOf(users[0].address)).to.be.eq(distributionAmount.div(3));
+        expect(await REWARD.balanceOf(users[1].address)).to.be.eq(distributionAmount.div(3));
+        expect(await REWARD2.balanceOf(users[0].address)).to.be.eq(distributionAmount2.div(3));
+        expect(await REWARD2.balanceOf(users[1].address)).to.be.eq(distributionAmount2.div(3));
+
+        await stakingRewardDistributor
+            .connect(users[1])
+            .transfer(users[0].address, ethUnits(depositAmount1 / 2));
+
+        await REWARD.approve(stakingRewardDistributor.address, distributionAmount.div(3));
+        await stakingRewardDistributor.distribute(REWARD.address, distributionAmount.div(3));
+        await REWARD2.approve(stakingRewardDistributor.address, distributionAmount2.div(3));
+        await stakingRewardDistributor.distribute(REWARD2.address, distributionAmount2.div(3));
+
+        await stakingRewardDistributor.connect(users[0]).claim(users[0].address);
+        await stakingRewardDistributor.connect(users[1]).claim(users[1].address);
+
+        expect(await REWARD.balanceOf(users[0].address)).to.be.eq(distributionAmount.div(2));
+        expect(await REWARD.balanceOf(users[1].address)).to.be.eq(distributionAmount.div(2));
+        expect(await REWARD2.balanceOf(users[0].address)).to.be.eq(distributionAmount2.div(2));
+        expect(await REWARD2.balanceOf(users[1].address)).to.be.eq(distributionAmount2.div(2));
+    });
 });

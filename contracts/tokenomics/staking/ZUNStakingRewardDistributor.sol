@@ -10,8 +10,8 @@ import './IZUNStakingRewardDistributor.sol';
 
 contract ZUNStakingRewardDistributor is
     IZUNStakingRewardDistributor,
-    BaseStakingRewardDistributor,
-    ERC20VotesUpgradeable
+    ERC20VotesUpgradeable,
+    BaseStakingRewardDistributor
 {
     using SafeERC20 for IERC20;
 
@@ -200,22 +200,32 @@ contract ZUNStakingRewardDistributor is
         emit Withdrawn(msg.sender, _lockIndex, amount, amountReduced, transferredAmount);
     }
 
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) public override(BaseStakingRewardDistributor, ERC20Upgradeable) returns (bool) {
+        return super.transfer(recipient, amount);
+    }
+
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) public override(BaseStakingRewardDistributor, ERC20Upgradeable) returns (bool) {
+        return super.transferFrom(sender, recipient, amount);
+    }
+
     function _update(
         address from,
         address to,
         uint256 value
-    ) internal override(ERC20Upgradeable, ERC20VotesUpgradeable) {
-        if (value > 0) {
-            uint256 totalSupply = totalSupply();
-            _checkpointRewards(from, totalSupply, false, address(0));
-            _checkpointRewards(to, totalSupply, false, address(0));
-        }
+    ) internal override(BaseStakingRewardDistributor, ERC20VotesUpgradeable) {
         super._update(from, to, value);
     }
 
     function nonces(
         address owner
-    ) public view override(ERC20PermitUpgradeable, NoncesUpgradeable) returns (uint256) {
+    ) public view override(BaseStakingRewardDistributor, NoncesUpgradeable) returns (uint256) {
         return super.nonces(owner);
     }
 }
