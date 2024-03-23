@@ -118,9 +118,10 @@ contract ZunamiPoolCompoundController is ERC20Permit, ZunamiPoolControllerBase {
     }
 
     function sellRewards(IERC20 feeToken) internal virtual returns (uint256) {
-        uint256 received = _sellRewards(rewardManager, feeToken);
-        collectedManagementFee += calcManagementFee(received);
-        return received - collectedManagementFee;
+        uint256 received = _sellRewardsAll(rewardManager, feeToken, collectedManagementFee);
+        uint256 managementFee = calcManagementFee(received);
+        collectedManagementFee += managementFee;
+        return received - managementFee;
     }
 
     function calcManagementFee(uint256 amount) internal view returns (uint256) {

@@ -115,7 +115,7 @@ contract RecapitalizationManager is AccessControl, RewardTokenManager {
         IERC20 depositedToken = pool.token(tid);
         if (address(depositedToken) == address(0)) revert WrongTid(tid);
 
-        _sellRewards(rewardManager, depositedToken, rewardAmounts);
+        _sellRewardsByAmounts(rewardManager, depositedToken, rewardAmounts);
 
         _depositToken(pool, sid, tid, depositedToken);
 
@@ -158,7 +158,7 @@ contract RecapitalizationManager is AccessControl, RewardTokenManager {
     function restoreStakedZunByRewards(
         IRewardManager rewardManager
     ) external onlyRole(EMERGENCY_ADMIN_ROLE) {
-        _sellRewards(rewardManager, zunToken);
+        _sellRewardsAll(rewardManager, zunToken, 0);
         uint256 zunTokenReturnAmount = zunToken.balanceOf(address(this));
         uint256 recapitalizedAmount = stakingRewardDistributor.recapitalizedAmount();
         if (zunTokenReturnAmount > recapitalizedAmount) {
