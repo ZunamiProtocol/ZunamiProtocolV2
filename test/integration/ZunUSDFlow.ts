@@ -23,6 +23,7 @@ describe('ZunUSD flow tests', () => {
         'UsdtCrvUsdStakeDaoCurve',
         'UsdcCrvUsdStakeDaoCurve',
         'ZunUSDVaultStrat',
+        'LlamalendCrvUsdERC4626Strat'
     ];
 
     async function deployFixture() {

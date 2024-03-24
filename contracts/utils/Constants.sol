@@ -63,12 +63,6 @@ library Constants {
         0x6B27D7BC63F1999D14fF9bA900069ee516669ee8;
     uint256 internal constant CVX_ETH_stETH_PID = 177;
 
-    // Will be added after deployment of zunUSD v2 pool and curve pool for zunUSD
-    address internal constant CRV_zunUSD_crvFRAX_ADDRESS = address(0);
-    address internal constant CRV_zunUSD_crvFRAX_LP_ADDRESS = address(0);
-    address internal constant CVX_zunUSD_crvFRAX_REWARDS_ADDRESS = address(0);
-    uint256 internal constant CVX_zunUSD_crvFRAX_PID = 0;
-
     address internal constant CRV_zunUSD_crvUSD_ADDRESS =
         0x8C24b3213FD851db80245FCCc42c40B94Ac9a745;
     address internal constant CRV_zunUSD_crvUSD_LP_ADDRESS =
@@ -78,4 +72,17 @@ library Constants {
     uint256 internal constant CVX_zunUSD_crvUSD_PID = 309;
 
     address internal constant CRV_USDT_crvUSD_ADDRESS = 0x390f3595bCa2Df7d23783dFd126427CCeb997BF4;
+
+    address internal constant LLAMALEND_CRVUSD_ADDRESS = 0xCeA18a8752bb7e7817F9AE7565328FE415C0f2cA;
+
+    // Will be added after deployment of zunUSD v2 pool and curve pool for zunUSD
+    address internal constant CRV_zunUSD_crvFRAX_ADDRESS = address(0);
+    address internal constant CRV_zunUSD_crvFRAX_LP_ADDRESS = address(0);
+    address internal constant CVX_zunUSD_crvFRAX_REWARDS_ADDRESS = address(0);
+    uint256 internal constant CVX_zunUSD_crvFRAX_PID = 0;
+
+    address internal constant CRV_zunETH_frxETH_ADDRESS = address(0);
+    address internal constant CRV_zunETH_frxETH_LP_ADDRESS = address(0);
+    address internal constant CVX_zunETH_frxETH_REWARDS_ADDRESS = address(0);
+    uint256 internal constant CVX_zunETH_frxETH_PID = 0;
 }
