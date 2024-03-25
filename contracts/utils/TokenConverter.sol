@@ -17,9 +17,6 @@ interface IERC20Decimals {
 contract TokenConverter is ITokenConverter, Ownable2Step {
     using SafeERC20 for IERC20;
 
-    uint256 public constant SLIPPAGE_DENOMINATOR = 10_000;
-    uint256 public constant DEFAULT_SLIPPAGE = 30; // 0.3%
-
     address public immutable curveRouter;
     mapping(address => mapping(address => CurveRoute)) routes;
 
@@ -67,7 +64,7 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
 
         IERC20(tokenIn_).safeTransferFrom(msg.sender, address(this), amount_);
         IERC20(tokenIn_).safeIncreaseAllowance(curveRouter, amount_);
-        
+
         uint256 receivedAmount = ICurveRouterV1(curveRouter).exchange(
             routes[tokenIn_][tokenOut_].route,
             routes[tokenIn_][tokenOut_].swapParams,
@@ -76,50 +73,5 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
         );
         IERC20 tokenOut = IERC20(tokenOut_);
         tokenOut.safeTransfer(msg.sender, tokenOut.balanceOf(address(this)));
-    }
-
-    function valuate(
-        address tokenIn_,
-        address tokenOut_,
-        uint256 amount_
-    ) public view returns (uint256 valuation) {
-        if (amount_ == 0) return 0;
-
-        uint8 decimalsDiff = _calculateDecimalsDiff(tokenIn_, tokenOut_);
-
-        valuation = ICurveRouterV1(curveRouter).get_dy(
-            routes[tokenIn_][tokenOut_].route,
-            routes[tokenIn_][tokenOut_].swapParams,
-            amount_
-        );
-        if (valuation < _applySlippage(amount_, 0, int8(decimalsDiff))) revert BrokenSlippage();
-    }
-
-    function _applySlippage(
-        uint256 amount,
-        uint256 slippage,
-        int8 decimalsDiff
-    ) internal pure returns (uint256) {
-        if (slippage > SLIPPAGE_DENOMINATOR) revert WrongSlippage();
-        if (slippage == 0) slippage = DEFAULT_SLIPPAGE;
-        uint256 value = (amount * (SLIPPAGE_DENOMINATOR - slippage));
-        if (decimalsDiff < 0) {
-            value = value / (10 ** uint8(decimalsDiff * (-1)));
-        } else {
-            value = value * (10 ** uint8(decimalsDiff));
-        }
-        return value / SLIPPAGE_DENOMINATOR;
-    }
-
-    function _calculateDecimalsDiff(
-        address tokenIn_,
-        address tokenOut_
-    ) internal view returns (uint8) {
-        uint8 decimalsTokenIn = IERC20Decimals(tokenIn_).decimals();
-        uint8 decimalsTokenOut = IERC20Decimals(tokenOut_).decimals();
-        uint8 decimalsDiff = decimalsTokenIn >= decimalsTokenOut
-            ? decimalsTokenIn - decimalsTokenOut
-            : decimalsTokenOut - decimalsTokenIn;
-        return decimalsDiff;
     }
 }
