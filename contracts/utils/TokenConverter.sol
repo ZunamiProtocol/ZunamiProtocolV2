@@ -8,10 +8,10 @@ import { Ownable2Step, Ownable } from '@openzeppelin/contracts/access/Ownable2St
 import '../utils/Constants.sol';
 import '../interfaces/ICurveRouter.sol';
 import '../interfaces/ITokenConverter.sol';
-import "hardhat/console.sol";
+import 'hardhat/console.sol';
 
 interface IERC20Decimals {
-        function decimals() external view returns (uint8);
+    function decimals() external view returns (uint8);
 }
 
 contract TokenConverter is ITokenConverter, Ownable2Step {
@@ -28,25 +28,24 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
     error WrongSlippage();
     error BrokenSlippage();
 
-
     constructor(address curveRouter_) Ownable(msg.sender) {
         if (curveRouter_ == address(0)) revert ZeroAddress();
         curveRouter = curveRouter_;
     }
 
     function setRoute(
-        address tokenIn, 
-        address tokenOut, 
-        address[11] memory route, 
+        address tokenIn,
+        address tokenOut,
+        address[11] memory route,
         uint256[5][5] memory swapParams
     ) external onlyOwner {
         routes[tokenIn][tokenOut] = CurveRoute(route, swapParams);
     }
 
     function setRoutes(
-        address[] memory tokenIn, 
-        address[] memory tokenOut, 
-        address[11][] memory route, 
+        address[] memory tokenIn,
+        address[] memory tokenOut,
+        address[11][] memory route,
         uint256[5][5][] memory swapParams
     ) external onlyOwner {
         if (tokenIn.length != tokenOut.length) revert WrongLength();
@@ -58,19 +57,17 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
         }
     }
 
-    function handle(address tokenIn_, address tokenOut_, uint256 amount_, uint256 slippage_) public {
+    function handle(
+        address tokenIn_,
+        address tokenOut_,
+        uint256 amount_,
+        uint256 slippage_
+    ) public {
         if (amount_ == 0) return;
 
         IERC20(tokenIn_).safeTransferFrom(msg.sender, address(this), amount_);
-
-        uint8 decimalsDiff = _calculateDecimalsDiff(tokenIn_, tokenOut_);
-        uint256 minAmountOut = _applySlippage(
-            amount_,
-            slippage_,
-            int8(decimalsDiff)
-        );
-
         IERC20(tokenIn_).safeIncreaseAllowance(curveRouter, amount_);
+        
         uint256 receivedAmount = ICurveRouterV1(curveRouter).exchange(
             routes[tokenIn_][tokenOut_].route,
             routes[tokenIn_][tokenOut_].swapParams,
@@ -95,8 +92,7 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
             routes[tokenIn_][tokenOut_].swapParams,
             amount_
         );
-        if (valuation < _applySlippage(amount_, 0, int8(decimalsDiff)))
-            revert BrokenSlippage();
+        if (valuation < _applySlippage(amount_, 0, int8(decimalsDiff))) revert BrokenSlippage();
     }
 
     function _applySlippage(
@@ -115,11 +111,15 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
         return value / SLIPPAGE_DENOMINATOR;
     }
 
-    function _calculateDecimalsDiff(address tokenIn_, address tokenOut_) internal view returns (uint8) {
+    function _calculateDecimalsDiff(
+        address tokenIn_,
+        address tokenOut_
+    ) internal view returns (uint8) {
         uint8 decimalsTokenIn = IERC20Decimals(tokenIn_).decimals();
         uint8 decimalsTokenOut = IERC20Decimals(tokenOut_).decimals();
-        uint8 decimalsDiff = decimalsTokenIn >= decimalsTokenOut ?
-            decimalsTokenIn - decimalsTokenOut : decimalsTokenOut - decimalsTokenIn;
+        uint8 decimalsDiff = decimalsTokenIn >= decimalsTokenOut
+            ? decimalsTokenIn - decimalsTokenOut
+            : decimalsTokenOut - decimalsTokenIn;
         return decimalsDiff;
     }
 }

@@ -7,17 +7,16 @@ struct CurveRoute {
 }
 
 interface ICurveRouterV1 {
-
     function exchange(
         address[11] calldata _route,
         uint[5][5] calldata _swap_params,
         uint _amount,
         uint _expected
-    ) external returns(uint);
+    ) external returns (uint);
 
     function get_dy(
         address[11] calldata _route,
         uint[5][5] calldata _swap_params,
         uint _amount
-    ) external view returns(uint);
+    ) external view returns (uint);
 }
