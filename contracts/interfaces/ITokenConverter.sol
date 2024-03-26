@@ -2,5 +2,10 @@
 pragma solidity ^0.8.23;
 
 interface ITokenConverter {
-    function handle(address from, address to, uint256 amount, uint256 slippage) external;
+    function handle(
+        address tokenIn,
+        address tokenOut,
+        uint256 amount,
+        uint256 minAmountOut
+    ) external;
 }

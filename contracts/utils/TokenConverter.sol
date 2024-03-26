@@ -52,7 +52,7 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
         address tokenIn_,
         address tokenOut_,
         uint256 amount_,
-        uint256 minAmountOut
+        uint256 minAmountOut_
     ) public {
         if (amount_ == 0) return;
 
@@ -63,7 +63,7 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
             routes[tokenIn_][tokenOut_].route,
             routes[tokenIn_][tokenOut_].swapParams,
             amount_,
-            minAmountOut
+            minAmountOut_
         );
         IERC20 tokenOut = IERC20(tokenOut_);
         tokenOut.safeTransfer(msg.sender, tokenOut.balanceOf(address(this)));
