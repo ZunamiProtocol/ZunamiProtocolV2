@@ -7,5 +7,5 @@ interface ITokenConverter {
         address tokenOut,
         uint256 amount,
         uint256 minAmountOut
-    ) external;
+    ) external returns (uint256);
 }

@@ -16,8 +16,6 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
 
     error ZeroAddress();
     error WrongLength();
-    error WrongSlippage();
-    error BrokenSlippage();
 
     constructor(address curveRouter_) Ownable(msg.sender) {
         if (curveRouter_ == address(0)) revert ZeroAddress();
@@ -51,21 +49,21 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
     function handle(
         address tokenIn_,
         address tokenOut_,
-        uint256 amount_,
+        uint256 amountIn_,
         uint256 minAmountOut_
-    ) public {
-        if (amount_ == 0) return;
+    ) public returns(uint256 amountOut) {
+        if (amountIn_ == 0) return 0;
 
-        IERC20(tokenIn_).safeTransferFrom(msg.sender, address(this), amount_);
-        IERC20(tokenIn_).safeIncreaseAllowance(curveRouter, amount_);
+        IERC20(tokenIn_).safeTransferFrom(msg.sender, address(this), amountIn_);
+        IERC20(tokenIn_).safeIncreaseAllowance(curveRouter, amountIn_);
 
-        ICurveRouterV1(curveRouter).exchange(
+        amountOut = ICurveRouterV1(curveRouter).exchange(
             routes[tokenIn_][tokenOut_].route,
             routes[tokenIn_][tokenOut_].swapParams,
-            amount_,
+            amountIn_,
             minAmountOut_
         );
         IERC20 tokenOut = IERC20(tokenOut_);
-        tokenOut.safeTransfer(msg.sender, tokenOut.balanceOf(address(this)));
+        tokenOut.safeTransfer(msg.sender, amountOut);
     }
 }
