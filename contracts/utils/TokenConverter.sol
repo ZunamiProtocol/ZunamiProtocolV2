@@ -4,15 +4,9 @@ pragma solidity ^0.8.23;
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import { Ownable2Step, Ownable } from '@openzeppelin/contracts/access/Ownable2Step.sol';
-
 import '../utils/Constants.sol';
 import '../interfaces/ICurveRouter.sol';
 import '../interfaces/ITokenConverter.sol';
-import 'hardhat/console.sol';
-
-interface IERC20Decimals {
-    function decimals() external view returns (uint8);
-}
 
 contract TokenConverter is ITokenConverter, Ownable2Step {
     using SafeERC20 for IERC20;
@@ -58,18 +52,18 @@ contract TokenConverter is ITokenConverter, Ownable2Step {
         address tokenIn_,
         address tokenOut_,
         uint256 amount_,
-        uint256 slippage_
+        uint256 minAmountOut
     ) public {
         if (amount_ == 0) return;
 
         IERC20(tokenIn_).safeTransferFrom(msg.sender, address(this), amount_);
         IERC20(tokenIn_).safeIncreaseAllowance(curveRouter, amount_);
 
-        uint256 receivedAmount = ICurveRouterV1(curveRouter).exchange(
+        ICurveRouterV1(curveRouter).exchange(
             routes[tokenIn_][tokenOut_].route,
             routes[tokenIn_][tokenOut_].swapParams,
             amount_,
-            0
+            minAmountOut
         );
         IERC20 tokenOut = IERC20(tokenOut_);
         tokenOut.safeTransfer(msg.sender, tokenOut.balanceOf(address(this)));
