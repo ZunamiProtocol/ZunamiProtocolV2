@@ -109,9 +109,7 @@ describe('Token Converter', () => {
                     '0x4ebdf703948ddcea3b11f675b4d1fba9d2414a14',
                     '0xf939e0a03fb07f59a73314e73794be0e57ac1b4e',
                 ],
-                [
-                    [2, 0, 1, 3, 3],
-                ]
+                [[2, 0, 1, 3, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -139,14 +137,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-                    tokenOutAddr,
-                ],
-                [
-                    [2, 1, 1, 1, 3],
-                ]
+                [tokenInAddr, '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7', tokenOutAddr],
+                [[2, 1, 1, 1, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -172,14 +164,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-                    tokenOutAddr,
-                ],
-                [
-                    [2, 0, 1, 1, 3],
-                ]
+                [tokenInAddr, '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7', tokenOutAddr],
+                [[2, 0, 1, 1, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -203,14 +189,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0x390f3595bCa2Df7d23783dFd126427CCeb997BF4',
-                    tokenOutAddr,
-                ],
-                [
-                    [0, 1, 1, 1, 2],
-                ]
+                [tokenInAddr, '0x390f3595bCa2Df7d23783dFd126427CCeb997BF4', tokenOutAddr],
+                [[0, 1, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -270,14 +250,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-                    tokenOutAddr,
-                ],
-                [
-                    [1, 2, 1, 1, 3],
-                ]
+                [tokenInAddr, '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7', tokenOutAddr],
+                [[1, 2, 1, 1, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -303,14 +277,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-                    tokenOutAddr,
-                ],
-                [
-                    [1, 0, 1, 1, 3],
-                ]
+                [tokenInAddr, '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7', tokenOutAddr],
+                [[1, 0, 1, 1, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -336,14 +304,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0x4dece678ceceb27446b35c672dc7d61f30bad69e',
-                    tokenOutAddr,
-                ],
-                [
-                    [0, 1, 1, 1, 2],
-                ]
+                [tokenInAddr, '0x4dece678ceceb27446b35c672dc7d61f30bad69e', tokenOutAddr],
+                [[0, 1, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -407,14 +369,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-                    tokenOutAddr,
-                ],
-                [
-                    [1, 2, 1, 1, 3],
-                ]
+                [tokenInAddr, '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7', tokenOutAddr],
+                [[1, 2, 1, 1, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -440,14 +396,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-                    tokenOutAddr,
-                ],
-                [
-                    [1, 0, 1, 1, 3],
-                ]
+                [tokenInAddr, '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7', tokenOutAddr],
+                [[1, 0, 1, 1, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -473,14 +423,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0x4dece678ceceb27446b35c672dc7d61f30bad69e',
-                    tokenOutAddr,
-                ],
-                [
-                    [0, 1, 1, 1, 2],
-                ]
+                [tokenInAddr, '0x4dece678ceceb27446b35c672dc7d61f30bad69e', tokenOutAddr],
+                [[0, 1, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -544,14 +488,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-                    tokenOutAddr,
-                ],
-                [
-                    [0, 2, 1, 1, 3],
-                ]
+                [tokenInAddr, '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7', tokenOutAddr],
+                [[0, 2, 1, 1, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -577,14 +515,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-                    tokenOutAddr,
-                ],
-                [
-                    [0, 1, 1, 1, 3],
-                ]
+                [tokenInAddr, '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7', tokenOutAddr],
+                [[0, 1, 1, 1, 3]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -687,14 +619,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0x390f3595bCa2Df7d23783dFd126427CCeb997BF4',
-                    tokenOutAddr,
-                ],
-                [
-                    [1, 0, 1, 1, 2],
-                ]
+                [tokenInAddr, '0x390f3595bCa2Df7d23783dFd126427CCeb997BF4', tokenOutAddr],
+                [[1, 0, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -720,14 +646,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0x4dece678ceceb27446b35c672dc7d61f30bad69e',
-                    tokenOutAddr,
-                ],
-                [
-                    [1, 0, 1, 1, 2],
-                ]
+                [tokenInAddr, '0x4dece678ceceb27446b35c672dc7d61f30bad69e', tokenOutAddr],
+                [[1, 0, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -789,14 +709,8 @@ describe('Token Converter', () => {
             await tokenConverter.setRoute(
                 tokenInAddr,
                 tokenOutAddr,
-                [
-                    tokenInAddr,
-                    '0x8c24b3213fd851db80245fccc42c40b94ac9a745',
-                    tokenOutAddr,
-                ],
-                [
-                    [0, 1, 1, 1, 2],
-                ]
+                [tokenInAddr, '0x8c24b3213fd851db80245fccc42c40b94ac9a745', tokenOutAddr],
+                [[0, 1, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -831,7 +745,7 @@ describe('Token Converter', () => {
                     '0x9c3b46c0ceb5b9e304fcd6d88fc50f7dd24b31bc',
                     '0x5e8422345238f34275888049021821e8e08caa1f',
                     '0x3a65cbaebbfecbea5d0cb523ab56fdbda7ff9aaa',
-                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222'
+                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222',
                 ],
                 [
                     [2, 1, 1, 3, 3],
@@ -846,9 +760,7 @@ describe('Token Converter', () => {
 
             const balanceBefore = await tokenOut.balanceOf(alice.address);
             await tokenIn.connect(alice).transfer(tokenConverter.address, amount);
-            await tokenConverter
-                .connect(alice)
-                .handle(tokenInAddr, tokenOutAddr, amount, 0);
+            await tokenConverter.connect(alice).handle(tokenInAddr, tokenOutAddr, amount, 0);
 
             expect(await tokenOut.balanceOf(alice.address)).to.be.gt(balanceBefore);
         });
@@ -870,7 +782,7 @@ describe('Token Converter', () => {
                     '0x47d5e1679fe5f0d9f0a657c6715924e33ce05093',
                     '0x5e8422345238f34275888049021821e8e08caa1f',
                     '0x3a65cbaebbfecbea5d0cb523ab56fdbda7ff9aaa',
-                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222'
+                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222',
                 ],
                 [
                     [1, 0, 1, 2, 2],
@@ -884,9 +796,7 @@ describe('Token Converter', () => {
 
             const balanceBefore = await tokenOut.balanceOf(alice.address);
             await tokenIn.connect(alice).transfer(tokenConverter.address, amount);
-            await tokenConverter
-                .connect(alice)
-                .handle(tokenInAddr, tokenOutAddr, amount, 0);
+            await tokenConverter.connect(alice).handle(tokenInAddr, tokenOutAddr, amount, 0);
 
             expect(await tokenOut.balanceOf(alice.address)).to.be.gt(balanceBefore);
         });
@@ -908,7 +818,7 @@ describe('Token Converter', () => {
                     '0x954313005c56b555bdc41b84d6c63b69049d7847',
                     '0x5e8422345238f34275888049021821e8e08caa1f',
                     '0x3a65cbaebbfecbea5d0cb523ab56fdbda7ff9aaa',
-                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222'
+                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222',
                 ],
                 [
                     [2, 1, 1, 3, 3],
@@ -922,9 +832,7 @@ describe('Token Converter', () => {
 
             const balanceBefore = await tokenOut.balanceOf(alice.address);
             await tokenIn.connect(alice).transfer(tokenConverter.address, amount);
-            await tokenConverter
-                .connect(alice)
-                .handle(tokenInAddr, tokenOutAddr, amount, 0);
+            await tokenConverter.connect(alice).handle(tokenInAddr, tokenOutAddr, amount, 0);
 
             expect(await tokenOut.balanceOf(alice.address)).to.be.gt(balanceBefore);
         });
@@ -946,9 +854,7 @@ describe('Token Converter', () => {
                     '0x9c3b46c0ceb5b9e304fcd6d88fc50f7dd24b31bc',
                     '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
                 ],
-                [
-                    [1, 0, 1, 1, 2],
-                ]
+                [[1, 0, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -977,11 +883,9 @@ describe('Token Converter', () => {
                 [
                     '0x5e8422345238f34275888049021821e8e08caa1f',
                     '0x3a65cbaebbfecbea5d0cb523ab56fdbda7ff9aaa',
-                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222'
+                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222',
                 ],
-                [
-                    [1, 0, 1, 1, 2],
-                ]
+                [[1, 0, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -1014,9 +918,7 @@ describe('Token Converter', () => {
                     '0x9c3b46c0ceb5b9e304fcd6d88fc50f7dd24b31bc',
                     '0x5e8422345238f34275888049021821e8e08caa1f',
                 ],
-                [
-                    [0, 1, 1, 1, 2],
-                ]
+                [[0, 1, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -1047,7 +949,7 @@ describe('Token Converter', () => {
                     '0x9c3b46c0ceb5b9e304fcd6d88fc50f7dd24b31bc',
                     '0x5e8422345238f34275888049021821e8e08caa1f',
                     '0x3a65cbaebbfecbea5d0cb523ab56fdbda7ff9aaa',
-                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222'
+                    '0xc2e660c62f72c2ad35ace6db78a616215e2f2222',
                 ],
                 [
                     [0, 1, 1, 1, 2],
@@ -1085,9 +987,7 @@ describe('Token Converter', () => {
                     '0x3a65cbaebbfecbea5d0cb523ab56fdbda7ff9aaa',
                     '0x5e8422345238f34275888049021821e8e08caa1f',
                 ],
-                [
-                    [0, 1, 1, 1, 2],
-                ]
+                [[0, 1, 1, 1, 2]]
             );
 
             const tokenIn = await ethers.getContractAt('ERC20Token', tokenInAddr);
@@ -1119,7 +1019,6 @@ describe('Token Converter', () => {
                     '0x5e8422345238f34275888049021821e8e08caa1f',
                     '0x9c3b46c0ceb5b9e304fcd6d88fc50f7dd24b31bc',
                     '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-                    
                 ],
                 [
                     [0, 1, 1, 1, 2],
@@ -1140,7 +1039,6 @@ describe('Token Converter', () => {
             expect(await tokenOut.balanceOf(alice.address)).to.be.gt(balanceBefore);
         });
     });
-
 
     // describe('token', () => {
     //     it('should swap token to token', async () => {
@@ -1186,6 +1084,4 @@ describe('Token Converter', () => {
     //         expect(await tokenOut.balanceOf(alice.address)).to.be.gt(balanceBefore);
     //     });
     // });
-
-
 });

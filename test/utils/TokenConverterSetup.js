@@ -145,40 +145,24 @@ async function setupTokenConverterStables(tokenConverter) {
         ],
     ];
     const swapParams = [
-        [
-            [2, 1, 1, 1, 3],
-        ],
-        [
-            [2, 0, 1, 1, 3],
-        ],
-        [
-            [0, 1, 1, 1, 2],
-        ],
+        [[2, 1, 1, 1, 3]],
+        [[2, 0, 1, 1, 3]],
+        [[0, 1, 1, 1, 2]],
         [
             [0, 1, 1, 1, 2],
             [0, 1, 1, 1, 2],
         ],
 
-        [
-            [1, 2, 1, 1, 3],
-        ],
-        [
-            [1, 0, 1, 1, 3],
-        ],
-        [
-            [0, 1, 1, 1, 2],
-        ],
+        [[1, 2, 1, 1, 3]],
+        [[1, 0, 1, 1, 3]],
+        [[0, 1, 1, 1, 2]],
         [
             [0, 1, 1, 1, 2],
             [0, 1, 1, 1, 2],
         ],
 
-        [
-            [0, 2, 1, 1, 3],
-        ],
-        [
-            [0, 1, 1, 1, 3],
-        ],
+        [[0, 2, 1, 1, 3]],
+        [[0, 1, 1, 1, 3]],
         [
             [0, 2, 1, 1, 3],
             [0, 1, 1, 1, 2],
@@ -189,31 +173,21 @@ async function setupTokenConverterStables(tokenConverter) {
             [0, 1, 1, 1, 2],
         ],
 
-        [
-            [1, 0, 1, 1, 2],
-        ],
+        [[1, 0, 1, 1, 2]],
 
-        [
-            [1, 0, 1, 1, 2],
-        ],
+        [[1, 0, 1, 1, 2]],
         [
             [1, 0, 1, 1, 2],
             [1, 0, 1, 1, 3],
         ],
-        [
-            [0, 1, 1, 1, 2],
-        ],
+        [[0, 1, 1, 1, 2]],
     ];
     await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
 }
 
 async function setupTokenConverterRewardsToZunETH(tokenConverter) {
-    const tokenIns = [
-        
-    ];
-    const tokenOuts = [
-       
-    ];
+    const tokenIns = [];
+    const tokenOuts = [];
     const routes = [
         [
             addresses.stablecoins.usdt,
@@ -221,22 +195,13 @@ async function setupTokenConverterRewardsToZunETH(tokenConverter) {
             addresses.stablecoins.usdc,
         ],
     ];
-    const swapParams = [
-        [
-            [2, 1, 1, 1, 3],
-        ],
-        
-    ];
+    const swapParams = [[[2, 1, 1, 1, 3]]];
     await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
 }
 
 async function setupTokenConverterETHsToZunETH(tokenConverter) {
-    const tokenIns = [
-        
-    ];
-    const tokenOuts = [
-       
-    ];
+    const tokenIns = [];
+    const tokenOuts = [];
     const routes = [
         [
             addresses.stablecoins.usdt,
@@ -244,17 +209,12 @@ async function setupTokenConverterETHsToZunETH(tokenConverter) {
             addresses.stablecoins.usdc,
         ],
     ];
-    const swapParams = [
-        [
-            [2, 1, 1, 1, 3],
-        ],
-        
-    ];
+    const swapParams = [[[2, 1, 1, 1, 3]]];
     await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
 }
 
 module.exports = {
     setupTokenConverterETHsToZunETH,
     setupTokenConverterRewardsToZunETH,
-    setupTokenConverterStables
+    setupTokenConverterStables,
 };
