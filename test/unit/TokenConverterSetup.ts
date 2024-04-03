@@ -5,7 +5,7 @@ import chai from 'chai';
 import { Contract } from '@ethersproject/contracts';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { FakeContract, smock } from '@defi-wonderland/smock';
-import { setupTokenConverter } from '../utils/TokenConverterSetup';
+import { setupTokenConverterStables } from '../utils/TokenConverterSetup.js';
 
 const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 
@@ -56,7 +56,7 @@ describe('Token Converter', () => {
         tokenConverter = await TokenConverterFactory.deploy(
             '0xF0d4c12A5768D806021F80a262B4d39d26C58b8D'
         );
-        await setupTokenConverter(tokenConverter);
+        await setupTokenConverterStables(tokenConverter);
     });
 
     describe('USDT', () => {

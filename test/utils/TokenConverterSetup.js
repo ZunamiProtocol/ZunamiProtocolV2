@@ -1,8 +1,10 @@
-import { Contract } from '@ethersproject/contracts';
+const { ethers } = require('hardhat');
+const { Contract } = require('@ethersproject/contracts');
+const { SignerWithAddress } = require('@nomiclabs/hardhat-ethers/signers');
 
-import * as addresses from '../address.json';
+const addresses = require('../address.json');
 
-export async function setupTokenConverter(tokenConverter: Contract) {
+async function setupTokenConverterStables(tokenConverter) {
     const tokenIns = [
         addresses.stablecoins.usdt,
         addresses.stablecoins.usdt,
@@ -143,24 +145,40 @@ export async function setupTokenConverter(tokenConverter: Contract) {
         ],
     ];
     const swapParams = [
-        [[2, 1, 1, 1, 3]],
-        [[2, 0, 1, 1, 3]],
-        [[0, 1, 1, 1, 2]],
+        [
+            [2, 1, 1, 1, 3],
+        ],
+        [
+            [2, 0, 1, 1, 3],
+        ],
+        [
+            [0, 1, 1, 1, 2],
+        ],
         [
             [0, 1, 1, 1, 2],
             [0, 1, 1, 1, 2],
         ],
 
-        [[1, 2, 1, 1, 3]],
-        [[1, 0, 1, 1, 3]],
-        [[0, 1, 1, 1, 2]],
+        [
+            [1, 2, 1, 1, 3],
+        ],
+        [
+            [1, 0, 1, 1, 3],
+        ],
+        [
+            [0, 1, 1, 1, 2],
+        ],
         [
             [0, 1, 1, 1, 2],
             [0, 1, 1, 1, 2],
         ],
 
-        [[0, 2, 1, 1, 3]],
-        [[0, 1, 1, 1, 3]],
+        [
+            [0, 2, 1, 1, 3],
+        ],
+        [
+            [0, 1, 1, 1, 3],
+        ],
         [
             [0, 2, 1, 1, 3],
             [0, 1, 1, 1, 2],
@@ -171,14 +189,72 @@ export async function setupTokenConverter(tokenConverter: Contract) {
             [0, 1, 1, 1, 2],
         ],
 
-        [[1, 0, 1, 1, 2]],
+        [
+            [1, 0, 1, 1, 2],
+        ],
 
-        [[1, 0, 1, 1, 2]],
+        [
+            [1, 0, 1, 1, 2],
+        ],
         [
             [1, 0, 1, 1, 2],
             [1, 0, 1, 1, 3],
         ],
-        [[0, 1, 1, 1, 2]],
+        [
+            [0, 1, 1, 1, 2],
+        ],
     ];
     await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
 }
+
+async function setupTokenConverterRewardsToZunETH(tokenConverter) {
+    const tokenIns = [
+        
+    ];
+    const tokenOuts = [
+       
+    ];
+    const routes = [
+        [
+            addresses.stablecoins.usdt,
+            '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
+            addresses.stablecoins.usdc,
+        ],
+    ];
+    const swapParams = [
+        [
+            [2, 1, 1, 1, 3],
+        ],
+        
+    ];
+    await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
+}
+
+async function setupTokenConverterETHsToZunETH(tokenConverter) {
+    const tokenIns = [
+        
+    ];
+    const tokenOuts = [
+       
+    ];
+    const routes = [
+        [
+            addresses.stablecoins.usdt,
+            '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
+            addresses.stablecoins.usdc,
+        ],
+    ];
+    const swapParams = [
+        [
+            [2, 1, 1, 1, 3],
+        ],
+        
+    ];
+    await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
+}
+
+module.exports = {
+    setupTokenConverterETHsToZunETH,
+    setupTokenConverterRewardsToZunETH,
+    setupTokenConverterStables
+};
