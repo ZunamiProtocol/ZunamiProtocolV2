@@ -18,13 +18,9 @@ export async function createConvertersAndRewardManagerContracts(
         stableConverter.address
     )) as IRewardManager;
 
-    const FraxEthNativeConverterFactory = await ethers.getContractFactory('FraxEthNativeConverter');
-    const frxEthNativeConverter =
-        (await FraxEthNativeConverterFactory.deploy()) as INativeConverter;
-
     const curveRouter = '0xF0d4c12A5768D806021F80a262B4d39d26C58b8D';
     const TokenConverterFactory = await ethers.getContractFactory('TokenConverter');
     const tokenConverter = (await TokenConverterFactory.deploy(curveRouter)) as ITokenConverter;
 
-    return { stableConverter, rewardManager, frxEthNativeConverter, tokenConverter };
+    return { stableConverter, rewardManager, tokenConverter };
 }

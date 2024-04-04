@@ -14,11 +14,12 @@ import { createPoolAndControllerZunETH } from '../utils/CreatePoolAndControllerZ
 import { getMinAmountZunETH } from '../utils/GetMinAmountZunETH';
 import { createEthCoins } from '../utils/CreateEthCoins';
 import { mintEthCoins } from '../utils/MintEthCoins';
+import { setupTokenConverterETHs } from '../utils/TokenConverterSetup';
 
 const ETH_stETH_pool_addr = '0x21E27a5E5513D6e65C4f830167390997aA84843a';
 
 describe('ZunETH flow tests', () => {
-    const strategyNames = ['stEthEthConvexCurveStrat', 'ZunETHVaultStrat', 'sfrxETHERC4626Strat'];
+    const strategyNames = ['ZunETHVaultStrat', 'stEthEthConvexCurveStrat', 'sfrxETHERC4626Strat'];
 
     async function deployFixture() {
         // Contracts are deployed using the first signer/account by default
@@ -33,21 +34,27 @@ describe('ZunETH flow tests', () => {
 
         const { zunamiPool, zunamiPoolController } = await createPoolAndControllerZunETH();
 
-        const { frxEthNativeConverter, stableConverter, rewardManager } =
+        const { tokenConverter, stableConverter, rewardManager } =
             await createConvertersAndRewardManagerContracts(
                 'StableConverter',
                 'SellingCurveRewardManager'
             );
+
+        await setupTokenConverterETHs(tokenConverter);
 
         const strategies = await createStrategies(
             strategyNames,
             genericOracle,
             zunamiPool,
             undefined,
-            frxEthNativeConverter,
+            tokenConverter,
             undefined,
             undefined
         );
+
+        for (let i = 1; i < strategies.length; i++) {
+            await strategies[i].setSlippage(150);
+        }
 
         const tokenApprovedAmount = '10000';
 

@@ -14,7 +14,7 @@ import { createStablecoins } from '../utils/CreateStablecoins';
 import { createStrategies } from '../utils/CreateStrategies';
 import { createPoolAndControllerZunUSD } from '../utils/CreatePoolAndControllerZunUSD';
 import { getMinAmountZunUSD } from '../utils/GetMinAmountZunUSD';
-import { setupTokenConverter } from '../utils/TokenConverterSetup';
+import { setupTokenConverterStables } from '../utils/TokenConverterSetup';
 
 const crvUSD_USDT_pool_addr = '0x390f3595bca2df7d23783dfd126427cceb997bf4';
 const crvUSD_USDC_pool_addr = '0x4dece678ceceb27446b35c672dc7d61f30bad69e';
@@ -42,20 +42,19 @@ describe('ZunUSD flow tests', () => {
 
         const { zunamiPool, zunamiPoolController } = await createPoolAndControllerZunUSD();
 
-        const { stableConverter, rewardManager, frxEthNativeConverter, tokenConverter } =
+        const { stableConverter, rewardManager, tokenConverter } =
             await createConvertersAndRewardManagerContracts(
                 'StableConverter',
                 'SellingCurveRewardManager'
             );
 
-        await setupTokenConverter(tokenConverter);
+        await setupTokenConverterStables(tokenConverter);
 
         const strategies = await createStrategies(
             strategyNames,
             genericOracle,
             zunamiPool,
             stableConverter,
-            frxEthNativeConverter,
             tokenConverter,
             undefined,
             undefined

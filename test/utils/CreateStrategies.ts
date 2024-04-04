@@ -29,7 +29,6 @@ export async function createStrategies(
     genericOracle: GenericOracle,
     zunamiPool: ZunamiPool,
     stableConverter: IStableConverter | undefined,
-    frxEthNativeConverter: INativeConverter | undefined,
     tokenConverter: ITokenConverter | undefined,
     tokens: string[] | undefined,
     tokensDecimals: number[] | undefined
@@ -47,7 +46,11 @@ export async function createStrategies(
             await strategy.setPriceOracle(genericOracle.address);
         }
 
-        if (tokenConverter && strategyName.includes('LlamalendCrvUsdERC4626Strat')) {
+        if (
+            (tokenConverter && strategyName.includes('LlamalendCrvUsdERC4626Strat')) ||
+            (tokenConverter && strategyName.includes('frxETH')) ||
+            (tokenConverter && strategyName.includes('stEth'))
+        ) {
             await strategy.setTokenConverter(tokenConverter.address);
         }
 
@@ -56,13 +59,6 @@ export async function createStrategies(
             (stableConverter && strategyName.includes('ConvexCurve'))
         ) {
             await strategy.setStableConverter(stableConverter.address);
-        }
-
-        if (
-            (frxEthNativeConverter && strategyName.includes('frxETH')) ||
-            (frxEthNativeConverter && strategyName.includes('stEth'))
-        ) {
-            await strategy.setNativeConverter(frxEthNativeConverter.address);
         }
 
         strategies.push(strategy);

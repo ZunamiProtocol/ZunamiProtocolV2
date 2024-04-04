@@ -71,8 +71,8 @@ contract EthConvexCurveStratBase is ConvexCurveStratBase {
         return [
             amounts[ZUNAMI_WETH_TOKEN_ID] +
                 converter.valuate(
-        address(tokens[ZUNAMI_FRXETH_TOKEN_ID]),
-        address(tokens[ZUNAMI_WETH_TOKEN_ID]),
+                    address(tokens[ZUNAMI_FRXETH_TOKEN_ID]),
+                    address(tokens[ZUNAMI_WETH_TOKEN_ID]),
                     amounts[ZUNAMI_FRXETH_TOKEN_ID]
                 ),
             0
@@ -89,8 +89,8 @@ contract EthConvexCurveStratBase is ConvexCurveStratBase {
                 amounts[ZUNAMI_FRXETH_TOKEN_ID]
             );
             amounts[ZUNAMI_WETH_TOKEN_ID] += converter.handle(
-            address(tokens[ZUNAMI_FRXETH_TOKEN_ID]),
-            address(tokens[ZUNAMI_WETH_TOKEN_ID]),
+                address(tokens[ZUNAMI_FRXETH_TOKEN_ID]),
+                address(tokens[ZUNAMI_WETH_TOKEN_ID]),
                 amounts[ZUNAMI_FRXETH_TOKEN_ID],
                 applySlippage(amounts[ZUNAMI_FRXETH_TOKEN_ID])
             );

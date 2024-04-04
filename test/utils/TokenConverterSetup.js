@@ -3,6 +3,7 @@ const { Contract } = require('@ethersproject/contracts');
 const { SignerWithAddress } = require('@nomiclabs/hardhat-ethers/signers');
 
 const addresses = require('../address.json');
+const { tokenify } = require('../unit/TokenConverter');
 
 async function setupTokenConverterStables(tokenConverter) {
     const tokenIns = [
@@ -185,36 +186,27 @@ async function setupTokenConverterStables(tokenConverter) {
     await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
 }
 
-async function setupTokenConverterRewardsToZunETH(tokenConverter) {
-    const tokenIns = [];
-    const tokenOuts = [];
+async function setupTokenConverterETHs(tokenConverter) {
+    const tokenIns = [addresses.crypto.frxETH, addresses.crypto.WETH];
+    const tokenOuts = [addresses.crypto.WETH, addresses.crypto.frxETH];
     const routes = [
         [
-            addresses.stablecoins.usdt,
-            '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-            addresses.stablecoins.usdc,
+            '0x5e8422345238f34275888049021821e8e08caa1f',
+            '0x9c3b46c0ceb5b9e304fcd6d88fc50f7dd24b31bc',
+            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+        ],
+        [
+            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+            '0x9c3b46c0ceb5b9e304fcd6d88fc50f7dd24b31bc',
+            '0x5e8422345238f34275888049021821e8e08caa1f',
         ],
     ];
-    const swapParams = [[[2, 1, 1, 1, 3]]];
-    await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
-}
+    const swapParams = [[[1, 0, 1, 1, 2]], [[0, 1, 1, 1, 2]]];
 
-async function setupTokenConverterETHsToZunETH(tokenConverter) {
-    const tokenIns = [];
-    const tokenOuts = [];
-    const routes = [
-        [
-            addresses.stablecoins.usdt,
-            '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-            addresses.stablecoins.usdc,
-        ],
-    ];
-    const swapParams = [[[2, 1, 1, 1, 3]]];
     await tokenConverter.setRoutes(tokenIns, tokenOuts, routes, swapParams);
 }
 
 module.exports = {
-    setupTokenConverterETHsToZunETH,
-    setupTokenConverterRewardsToZunETH,
+    setupTokenConverterETHs,
     setupTokenConverterStables,
 };
