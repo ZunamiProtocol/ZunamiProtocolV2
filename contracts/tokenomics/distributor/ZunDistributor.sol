@@ -3,8 +3,8 @@ pragma solidity ^0.8.23;
 
 import '@openzeppelin/contracts/access/Ownable2Step.sol';
 import '@openzeppelin/contracts/utils/Pausable.sol';
-import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
-import '@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/governance/utils/IVotes.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/utils/Nonces.sol';
 import { EIP712 } from '@openzeppelin/contracts/utils/cryptography/EIP712.sol';
@@ -13,7 +13,7 @@ import '@openzeppelin/contracts/utils/ReentrancyGuard.sol';
 import '../../interfaces/IGauge.sol';
 
 contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGuard {
-    using SafeERC20 for ERC20;
+    using SafeERC20 for IERC20;
 
     bytes32 public constant BALLOT_TYPEHASH =
         keccak256(
@@ -36,8 +36,8 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
 
     Gauge[] public gauges;
 
-    ERC20Votes public immutable voteToken;
-    ERC20 public immutable token;
+    IVotes public immutable voteToken;
+    IERC20 public immutable token;
 
     uint256 public votingThreshold; // in tokens
 
@@ -83,11 +83,11 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
         if (_token == address(0)) {
             revert ZeroAddress();
         }
-        token = ERC20(_token);
+        token = IERC20(_token);
         if (_voteToken == address(0)) {
             revert ZeroAddress();
         }
-        voteToken = ERC20Votes(_voteToken);
+        voteToken = IVotes(_voteToken);
 
         if (_startBlock < block.number) {
             _startBlock = block.number;
@@ -265,7 +265,7 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
     }
 
     function setVotingThreshold(uint256 _threshold) external onlyOwner whenNotPaused {
-        if (_threshold > voteToken.totalSupply()) {
+        if (_threshold > IERC20(address(voteToken)).totalSupply()) {
             revert WrongVotingThreshold();
         }
         votingThreshold = _threshold;
@@ -277,7 +277,7 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
      * @param _token The ERC20 token to withdraw from.
      * @notice Only the owner can withdraw tokens.
      */
-    function withdrawEmergency(ERC20 _token) external onlyOwner {
+    function withdrawEmergency(IERC20 _token) external onlyOwner {
         uint256 tokenBalance = _token.balanceOf(address(this));
         if (tokenBalance > 0) {
             _token.safeTransfer(msg.sender, tokenBalance);

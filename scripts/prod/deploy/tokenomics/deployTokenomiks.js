@@ -73,6 +73,7 @@ async function main() {
     await zunamiGovernor.deployed();
     console.log('ZunamiGovernor:', zunamiGovernor.address);
 
+
     // Aps zunUSD LP Staking Reward Distributor
 
     console.log('Deploy StakingRewardDistributorGauge:');
@@ -124,6 +125,9 @@ async function main() {
     tx = await stakingRewardDistributor.addRewardToken(zunToken.address);
     await tx.wait();
     console.log('Reward token added: ', zunToken.address);
+
+
+
 }
 
 main()
