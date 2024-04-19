@@ -11,7 +11,6 @@ import { EIP712 } from '@openzeppelin/contracts/utils/cryptography/EIP712.sol';
 import { SignatureChecker } from '@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol';
 import '@openzeppelin/contracts/utils/ReentrancyGuard.sol';
 import '../../interfaces/IGauge.sol';
-
 contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
@@ -158,7 +157,7 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
         uint256[] calldata gaugeIds,
         uint256[] calldata amounts
     ) internal returns (uint256 totalVotes) {
-        uint256 gaugeIdsLength_ = gauges.length;
+        uint256 gaugeIdsLength_ = gaugeIds.length;
         if (gaugeIdsLength_ != amounts.length) {
             revert WrongLength();
         }

@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 import { loadFixture, mine } from '@nomicfoundation/hardhat-network-helpers';
 import { BigNumber, utils } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils';
@@ -12,7 +12,7 @@ import {
     ApproveGauge,
     TransferGauge,
     StakingRewardDistributorGauge,
-    IDistributor,
+    StakingRewardDistributor,
 } from '../../typechain-types';
 
 describe('ZunDistributor tests', () => {
@@ -46,9 +46,18 @@ describe('ZunDistributor tests', () => {
             transferGaugeRec.address
         )) as TransferGauge;
 
-        const stakingRewardDistributor = (await smock.fake(
-            'IDistributor'
-        )) as FakeContract<IDistributor>;
+        const StakingRewardDistributorFactory = await ethers.getContractFactory(
+            'StakingRewardDistributor'
+        );
+        const instance = await upgrades.deployProxy(
+            StakingRewardDistributorFactory,
+            [ZUN.address, 'LP', 'LP', dao.address],
+            {
+                kind: 'uups',
+            }
+        );
+        await instance.deployed();
+        const stakingRewardDistributor = instance as StakingRewardDistributor;
 
         const StakingRewardDistributorGaugeFactory = await ethers.getContractFactory(
             'StakingRewardDistributorGauge'
@@ -57,6 +66,21 @@ describe('ZunDistributor tests', () => {
             ZUN.address,
             stakingRewardDistributor.address
         )) as StakingRewardDistributorGauge;
+
+        await stakingRewardDistributor
+            .connect(dao)
+            .grantRole(
+                await stakingRewardDistributor.DISTRIBUTOR_ROLE(),
+                stakingRewardDistributorGauge.address
+            );
+        await ZUN.connect(voter).approve(
+            stakingRewardDistributor.address,
+            ethers.constants.MaxUint256
+        );
+        await stakingRewardDistributor
+            .connect(voter)
+            .deposit(ethers.utils.parseEther('1000'), voter.address);
+        await stakingRewardDistributor.connect(dao).addRewardToken(ZUN.address);
 
         const addedGauge = (await TransferGaugeFactory.deploy(
             ZUN.address,
@@ -73,8 +97,8 @@ describe('ZunDistributor tests', () => {
             [approveGauge.address, transferGauge.address, stakingRewardDistributorGauge.address],
             [parseUnits('1000', 'ether'), parseUnits('1000', 'ether'), parseUnits('1000', 'ether')]
         )) as ZunDistributor;
-
         await ZUN.transfer(distributor.address, parseUnits('32000000', 'ether'));
+
         expect(await ZUN.balanceOf(distributor.address)).to.eq(parseUnits('32000000', 'ether'));
 
         return {
@@ -181,7 +205,6 @@ describe('ZunDistributor tests', () => {
             distributor,
             dao,
         } = await loadFixture(deployFixture);
-
         // set voting threshold
         expect(await distributor.votingThreshold()).to.eq(0);
         await distributor.connect(dao).setVotingThreshold(parseUnits('1000', 'ether'));
@@ -688,9 +711,10 @@ describe('ZunDistributor tests', () => {
         const { voter, approveGauge, transferGauge, ZUN, vlZUN, distributor, dao } =
             await loadFixture(deployFixture);
 
-        await expect(
-            distributor.withdrawEmergency(ZUN.address)
-        ).to.be.revertedWithCustomError(distributor, 'OwnableUnauthorizedAccount');
+        await expect(distributor.withdrawEmergency(ZUN.address)).to.be.revertedWithCustomError(
+            distributor,
+            'OwnableUnauthorizedAccount'
+        );
 
         expect(await ZUN.balanceOf(dao.address)).to.eq(0);
 
