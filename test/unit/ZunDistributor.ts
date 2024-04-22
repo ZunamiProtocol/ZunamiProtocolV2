@@ -600,8 +600,8 @@ describe('ZunDistributor tests', () => {
             expect(await ZUN.balanceOf(transferGaugeRec.address)).to.eq(gaugeBal);
 
             // check yearDistributionValue
-            if (i % 26 == 0) {
-                yearCount = BigNumber.from(i).div(26);
+            if (i % 52 == 0) {
+                yearCount = BigNumber.from(i).div(52);
                 yearValue = firstYearValue
                     .mul(BigNumber.from(650).pow(yearCount))
                     .div(BigNumber.from(1000).pow(yearCount));
