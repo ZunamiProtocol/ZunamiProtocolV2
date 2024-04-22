@@ -40,7 +40,7 @@
     "bignumber.js": "^9.1.2",
     "chai": "^4.4.1",
     "dotenv": "^16.0.3",
-    "hardhat": "^2.22.2",
+    "hardhat": "^2.22.3",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-deploy": "^0.11.42",
     "prettier": "2.8.3",

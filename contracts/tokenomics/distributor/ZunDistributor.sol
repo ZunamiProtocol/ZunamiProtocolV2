@@ -19,7 +19,7 @@ contract ZunDistributor is Ownable2Step, Pausable, EIP712, Nonces, ReentrancyGua
             'Ballot(bytes32 gaugeIdsHash,bytes32 amountsHash,address voter,uint256 nonce,uint256 deadline)'
         );
 
-    uint256 public constant VOTING_PERIOD = (14 * 24 * 60 * 60) / 12; // 2 week in blocks
+    uint256 public constant VOTING_PERIOD = (7 * 24 * 60 * 60) / 12; // 1 week in blocks
     uint256 public constant ANNUAL_DECREASE_PERCENT = 35; // 35%
     uint256 public constant FIRST_YEAR_DISTRIBUTION_VALUE = 11_200_000 * 1e18; // in tokens
     uint256 public constant DENOMINATOR = 100;
