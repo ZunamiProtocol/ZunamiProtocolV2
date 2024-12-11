@@ -3,7 +3,7 @@ const { ethers } = require('hardhat');
 async function createAndInitStrategy(zunamiPool, stratName, oracle, tokenConverter) {
     const StratFactory = await ethers.getContractFactory(stratName);
     const strategy = await StratFactory.deploy();
-    await strategy.deployed();
+    // await strategy.deployed();
     console.log(`${stratName} strategy deployed to: ${strategy.address}`);
 
     if (!!oracle) {
@@ -33,6 +33,7 @@ async function main() {
     console.log('Start deploy');
 
     const genericOracleAddr = '0x4142bB1ceeC0Dec4F7aaEB3D51D2Dc8E6Ee18410';
+    console.log('GenericOracle:', genericOracleAddr);
 
     // console.log('Deploy TokenConverter:');
     const TokenConverterFactory = await ethers.getContractFactory('TokenConverter');

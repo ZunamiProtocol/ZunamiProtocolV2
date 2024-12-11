@@ -12,7 +12,7 @@ async function main() {
     // const zunamiPoolAddress = '0x28e487bbF6b64867C29e61DccbCD17aB64082889';
     // const zunamiPoolControllerAddress = '0xd9F559280c9d308549e84946C0d668a817fcCFB5';
 
-    // zunETH:
+    // // zunETH:
     // const zunamiPoolAddress = '0xc2e660C62F72c2ad35AcE6DB78a616215E2F2222';
     // const zunamiPoolControllerAddress = '0x4BD57f97E35E7c3302Dc3A8d4d803826856F9f32';
 

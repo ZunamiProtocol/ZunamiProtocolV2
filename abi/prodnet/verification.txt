@@ -236,3 +236,15 @@ npx hardhat verify --network mainnet 0x6d2D702c24Fe116e4C859f058551719fB839236F
 
 // ZunamiStableZap zunBtc
 npx hardhat verify --network mainnet 0xBb3C52D7aA3cc1296Bd50Ba5aA8e46A82546B852 0x8d6C5C61E815A53b1D24AC94DEEC62f31911EeB4 0x4142bB1ceeC0Dec4F7aaEB3D51D2Dc8E6Ee18410 86400 12000000000000000000 86400 1000000000000000000 0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB 7500 0xd5d1acc9c7ebaf8bbf85c45aee2b8b3f3b1bd062
+
+// LlamalendWeth2StakeDaoERC4626Strat
+npx hardhat verify --network mainnet --contract contracts/strategies/erc4626/stakeDao/llamalend/LlamalendWeth2StakeDaoERC4626Strat.sol:LlamalendWeth2StakeDaoERC4626Strat 0x531BbA64373A1B8E5a94BB51ba32CCe1cB42633D
+
+// ZunamiPoolApsZunBTC:
+npx hardhat verify --network mainnet --contract contracts/configs/aps/ZunamiPoolApsZunBTC.sol:ZunamiPoolApsZunBTC 0x3c6e1ffffc293e93bb383b375ba348b85e828D82
+
+// ZunamiPoolControllerApsZunBTC:
+npx hardhat verify --network mainnet --contract contracts/configs/aps/ZunamiPoolControllerApsZunBTC.sol:ZunamiPoolControllerApsZunBTC 0xAEa5f929bC26Dea0c3f5d6dcb0e00ce83751Fc41 0x3c6e1ffffc293e93bb383b375ba348b85e828D82
+
+// StakingRewardDistributor zunBTC
+npx hardhat verify --network mainnet 0xA3DEB7F7d181D7B42E0100E7118eDD57e20835c4

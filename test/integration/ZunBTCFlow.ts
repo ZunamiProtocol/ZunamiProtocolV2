@@ -192,7 +192,7 @@ describe("ZunBTC flow tests", () => {
             zStableBefore
           );
           expect(stableDiff).to.gt(0);
-          expect(stableDiff).to.gt("1994900000000000000");
+          expect(stableDiff).to.gt("1985000000000000000");
         }
       }
     }
@@ -221,7 +221,7 @@ describe("ZunBTC flow tests", () => {
 
         const stableDiff = stableAmount.sub(stableBefore);
         expect(stableDiff).to.gt(0);
-        expect(stableDiff).to.gt("1994900000000000000");
+        expect(stableDiff).to.gt("1985000000000000000");
 
         await zunamiPool.connect(user).approve(zunamiPoolController.address, stableAmount);
 

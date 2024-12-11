@@ -34,32 +34,62 @@ async function main() {
     // await genericOracle.setCustomOracle(tBtc, tBTCOracle.address);
     // console.log('tBtc Llamma Oracle set to GenericOracle');
 
-    const cbBtcAddress = '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf';
-    const cbBtcOracleFactory = await ethers.getContractFactory('CbBTCOracle');
-    const cbBtcOracle = await cbBtcOracleFactory.deploy(genericOracle.address);
-    await cbBtcOracle.deployed();
-    console.log('CbBTC Oracle deployed to:', cbBtcOracle.address);
-    await genericOracle.setCustomOracle(cbBtcAddress, cbBtcOracle.address);
-    console.log('CbBTC Oracle set to GenericOracle');
+    // const cbBtcAddress = '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf';
+    // const cbBtcOracleFactory = await ethers.getContractFactory('CbBTCOracle');
+    // const cbBtcOracle = await cbBtcOracleFactory.deploy(genericOracle.address);
+    // await cbBtcOracle.deployed();
+    // console.log('CbBTC Oracle deployed to:', cbBtcOracle.address);
+    // await genericOracle.setCustomOracle(cbBtcAddress, cbBtcOracle.address);
+    // console.log('CbBTC Oracle set to GenericOracle');
+    //
+    // const StaticCurveLPOracleFactory = await ethers.getContractFactory('StaticCurveLPOracle');
+    //
+    // const cbBtc_wBtc_pool_addr = "0x839d6bDeDFF886404A6d7a788ef241e4e28F4802";
+    // let staticCurveLPOracle = await StaticCurveLPOracleFactory.deploy(
+    //     genericOracle.address,
+    //     [cbBtcAddress, addresses.crypto.wBtc],
+    //     [8, 8],
+    //     cbBtc_wBtc_pool_addr
+    // );
+    // await staticCurveLPOracle.deployed();
+    // console.log('StaticCurveLPOracle cbBtc wBtc pool deployed to:', staticCurveLPOracle.address,
+    //     genericOracle.address,
+    //     [cbBtcAddress, addresses.crypto.wBtc],
+    //     [8, 8],
+    //     cbBtc_wBtc_pool_addr
+    // );
+    // await genericOracle.setCustomOracle(cbBtc_wBtc_pool_addr, staticCurveLPOracle.address);
+    // console.log('StaticCurveLPOracle set to GenericOracle');
+
+    const zunBTCAddress = '0x0FA308AE0ddE633b6eDE22ba719E7E0Bc45FC6dB';
+
+    const ZunBTCOracleFactory = await ethers.getContractFactory('ZunBTCOracle');
+    const zunBtcOracle = await ZunBTCOracleFactory.deploy(genericOracleAddress);
+    await zunBtcOracle.deployed();
+    console.log('ZunBTC Oracle deployed to:', zunBtcOracle.address);
+
+    await genericOracle.setCustomOracle(zunBTCAddress, zunBtcOracle.address);
+    console.log('ZunBTC Oracle set to GenericOracle');
 
     const StaticCurveLPOracleFactory = await ethers.getContractFactory('StaticCurveLPOracle');
 
-    const cbBtc_wBtc_pool_addr = "0x839d6bDeDFF886404A6d7a788ef241e4e28F4802";
-    let staticCurveLPOracle = await StaticCurveLPOracleFactory.deploy(
-        genericOracle.address,
-        [cbBtcAddress, addresses.crypto.wBtc],
-        [8, 8],
-        cbBtc_wBtc_pool_addr
+    const ZunBtcTBtcPoolAddress = '0x6fBc5Ddc181240Cb1d9bcEc6Fdea429036818035';
+    const staticCurveLPOracle = await StaticCurveLPOracleFactory.deploy(
+        genericOracleAddress,
+        [zunBTCAddress, addresses.crypto.tBtc],
+        [18, 18],
+        ZunBtcTBtcPoolAddress
     );
     await staticCurveLPOracle.deployed();
-    console.log('StaticCurveLPOracle cbBtc wBtc pool deployed to:', staticCurveLPOracle.address,
-        genericOracle.address,
-        [cbBtcAddress, addresses.crypto.wBtc],
-        [8, 8],
-        cbBtc_wBtc_pool_addr
+    console.log('StaticCurveLPOracle ZunBtcTBtcPool deployed to:', staticCurveLPOracle.address,
+        genericOracleAddress,
+        [zunBTCAddress, addresses.crypto.tBtc],
+        [18, 18],
+        ZunBtcTBtcPoolAddress
     );
-    await genericOracle.setCustomOracle(cbBtc_wBtc_pool_addr, staticCurveLPOracle.address);
-    console.log('StaticCurveLPOracle set to GenericOracle');
+
+    await genericOracle.setCustomOracle(ZunBtcTBtcPoolAddress, staticCurveLPOracle.address);
+    console.log('StaticCurveLPOracle ZunBtcTBtcPool set to GenericOracle');
 }
 
 main()

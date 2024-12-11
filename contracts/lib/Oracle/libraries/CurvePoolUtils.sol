@@ -29,7 +29,7 @@ library CurvePoolUtils {
 
     function ensurePoolBalanced(PoolMeta memory poolMeta) internal view {
         uint256 fromDecimals = poolMeta.decimals[0];
-        uint256 fromBalance = 10 ** fromDecimals;
+        uint256 fromBalance = 10 ** fromDecimals / 100; // 1/100 of the token for BTC
         uint256 fromPrice = poolMeta.prices[0];
         for (uint256 i = 1; i < poolMeta.numberOfCoins; ++i) {
             uint256 toDecimals = poolMeta.decimals[i];

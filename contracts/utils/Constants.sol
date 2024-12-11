@@ -152,6 +152,10 @@ library Constants {
     address internal constant CRV_CBBTC_WBTC_LP_ADDRESS = 0x839d6bDeDFF886404A6d7a788ef241e4e28F4802;
     address internal constant SDT_CBBTC_WBTC_VAULT_ADDRESS = 0x19812bb16Dc0B7cA3835A71372f91Db9eFF5dcd8;
 
+    address internal constant SDT_zunBTC_tBTC_VAULT_ADDRESS = 0xdb781b5Ee8223B44559ebf057F6845a49b00730F;
+    address internal constant CRV_zunBTC_tBTC_ADDRESS = 0x6fBc5Ddc181240Cb1d9bcEc6Fdea429036818035;
+    address internal constant CRV_zunBTC_tBTC_LP_ADDRESS = 0x6fBc5Ddc181240Cb1d9bcEc6Fdea429036818035;
+
     // Will be added after deployment of zunUSD v2 pool and curve pool for zunUSD
     address internal constant CRV_zunUSD_crvFRAX_ADDRESS = address(0);
     address internal constant CRV_zunUSD_crvFRAX_LP_ADDRESS = address(0);
