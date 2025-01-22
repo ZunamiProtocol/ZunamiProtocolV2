@@ -4,9 +4,9 @@ async function main() {
 
     const tokenConverterAddress = '0xf48A59434609b6e934c2cF091848FA2D28b34bfc';
 
-    // // zunUSD
-    // const zunamiPoolAddress = '0x8C0D76C9B18779665475F3E212D9Ca1Ed6A1A0e6';
-    // const zunamiPoolControllerAddress = '0x2F858e4d6a96c81E37a130314D6cECB64FDC6f4E';
+    // zunUSD
+    const zunamiPoolAddress = '0x8C0D76C9B18779665475F3E212D9Ca1Ed6A1A0e6';
+    const zunamiPoolControllerAddress = '0x2F858e4d6a96c81E37a130314D6cECB64FDC6f4E';
     //
     // // zunUSD APS:
     // const zunamiPoolAddress = '0x28e487bbF6b64867C29e61DccbCD17aB64082889';
@@ -20,9 +20,9 @@ async function main() {
     // const zunamiPoolAddress = '0x5Ab3aa11a40eB34f1d2733f08596532871bd28e2';
     // const zunamiPoolControllerAddress = '0xD8132d8cfCA9Ed8C95e46Cb59ae6E2C9963dA61f';
 
-    // zunBTC:
-    const zunamiPoolAddress = '0x0FA308AE0ddE633b6eDE22ba719E7E0Bc45FC6dB';
-    const zunamiPoolControllerAddress = '0x8d6C5C61E815A53b1D24AC94DEEC62f31911EeB4';
+    // // zunBTC:
+    // const zunamiPoolAddress = '0x0FA308AE0ddE633b6eDE22ba719E7E0Bc45FC6dB';
+    // const zunamiPoolControllerAddress = '0x8d6C5C61E815A53b1D24AC94DEEC62f31911EeB4';
 
     // // zunBTC APS:
     // const zunamiPoolAddress = '0x3c6e1ffffc293e93bb383b375ba348b85e828D82';

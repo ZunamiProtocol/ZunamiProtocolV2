@@ -248,3 +248,6 @@ npx hardhat verify --network mainnet --contract contracts/configs/aps/ZunamiPool
 
 // StakingRewardDistributor zunBTC
 npx hardhat verify --network mainnet 0xA3DEB7F7d181D7B42E0100E7118eDD57e20835c4
+
+// scrvUsdERC4626Strat new
+npx hardhat verify --network mainnet 0xd75172F2687a40A727cfAC15a2BA44192bbcDB1c
