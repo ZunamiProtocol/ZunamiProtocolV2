@@ -1,5 +1,5 @@
 const { ethers } = require('hardhat');
-const addresses = require("../../../test/address.json");
+
 async function main() {
     console.log('Start deploy');
 
@@ -7,21 +7,19 @@ async function main() {
 
     console.log('Admin:', admin.address);
 
-    const zunAddr = '0x6b5204b0be36771253cc38e88012e02b752f0f36';
-    console.log('ZUN address:', zunAddr);
+    const zunamiTeam = '0xb056B9A45f09b006eC7a69770A65339586231a34';
+    console.log('Protocol Admin:', zunamiTeam);
 
-    const vlZUN = '';
-    const StakingRewardDistributor = await ethers.getContractFactory('ZUNStakingRewardDistributor');
-    const stakingRewardDistributor = await StakingRewardDistributor.attach(vlZUN);
-    console.log('ZUNStakingRewardDistributor:', stakingRewardDistributor.address);
+
+    const vlZUN = '0x45af4F12B46682B3958B297bAcebde2cE2E795c3';
 
     console.log('Deploy TimelockController:');
     const TimelockController = await ethers.getContractFactory('TimelockController');
     const timelockController = await TimelockController.deploy(
-        172800, // 2 days
-        [admin.address], // PROPOSERS
-        [admin.address], // EXECUTOR
-        admin.address
+        86400, // 1 day
+        [zunamiTeam], // PROPOSERS
+        [ethers.constants.AddressZero], // EXECUTOR
+        zunamiTeam // admin
     );
     await timelockController.deployed();
     console.log('TimelockController:', timelockController.address);

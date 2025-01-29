@@ -623,3 +623,11 @@ scrvUsdERC4626Strat strategy deployed to: 0xd75172F2687a40A727cfAC15a2BA44192bbc
 Set price oracle address 0x4142bB1ceeC0Dec4F7aaEB3D51D2Dc8E6Ee18410 in scrvUsdERC4626Strat strategy
 Set token converter address 0xf48A59434609b6e934c2cF091848FA2D28b34bfc in scrvUsdERC4626Strat strategy
 Set zunami pool address 0x8C0D76C9B18779665475F3E212D9Ca1Ed6A1A0e6 in scrvUsdERC4626Strat strategy
+
+
+Admin: 0xe9b2B067eE106A6E518fB0552F3296d22b82b32B
+Protocol Admin: 0xb056B9A45f09b006eC7a69770A65339586231a34
+Deploy TimelockController:
+TimelockController: 0xd752bbeb0b199026cbb7d76e4EEb30440abefca4
+Deploy ZunamiGovernor:
+ZunamiGovernor: 0x0357F8afCf8BD2b119a4451bf605BEF8cCA03f98

@@ -251,3 +251,9 @@ npx hardhat verify --network mainnet 0xA3DEB7F7d181D7B42E0100E7118eDD57e20835c4
 
 // scrvUsdERC4626Strat new
 npx hardhat verify --network mainnet 0xd75172F2687a40A727cfAC15a2BA44192bbcDB1c
+
+// TimelockController
+npx hardhat verify --network mainnet --constructor-args ./abi/TimelockController_arguments.js 0xd752bbeb0b199026cbb7d76e4EEb30440abefca4
+
+// ZunamiGovernor
+npx hardhat verify --network mainnet 0x0357F8afCf8BD2b119a4451bf605BEF8cCA03f98 0x45af4F12B46682B3958B297bAcebde2cE2E795c3 0xd752bbeb0b199026cbb7d76e4EEb30440abefca4

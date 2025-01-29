@@ -21,9 +21,13 @@ contract ZunamiGovernor is
         TimelockController _timelock
     )
         Governor('ZunamiGovernor')
-        GovernorSettings(7200 /* 1 day */, 50400 /* 1 week */, 0)
+        GovernorSettings(
+            0, /* voting delay zero */
+            28800 /* voting period 4 day */,
+            50000 * 1e18 /* proposal threshold 50k vlZUN */
+        )
         GovernorVotes(_token)
-        GovernorVotesQuorumFraction(4)
+        GovernorVotesQuorumFraction(30)
         GovernorTimelockControl(_timelock)
     {}
 
