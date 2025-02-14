@@ -18,19 +18,14 @@ async function main() {
     const zunStaking = await ZunStaking.attach(zunStakingAddress);
     console.log('ZUNStakingRewardDistributor:', zunStaking.address);
 
-    const amount = '51000000000000000000000'; // 51 000 ZUN
-    let tx = await zunToken.approve(zunStaking.address, amount);
-    await tx.wait();
-    console.log('Approved: ', (await zunToken.allowance(admin.address, zunStaking.address)).toString());
-
     const receiver = admin.address;
-    tx = await zunStaking.deposit(
-        amount,
+    tx = await zunStaking.delegate(
         receiver
     )
     await tx.wait();
 
-    console.log('Deposited: ', (await zunStaking.balanceOf(admin.address)).toString());
+    console.log('Delegate: ', (await zunStaking.delegates(receiver)).toString());
+    console.log('Delegated amount: ', (await zunStaking.getVotes(receiver)).toString());
 }
 
 main()

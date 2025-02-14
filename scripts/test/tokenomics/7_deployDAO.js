@@ -7,11 +7,11 @@ async function main() {
 
     console.log('Admin:', admin.address);
 
-    const zunamiTeam = '0xb056B9A45f09b006eC7a69770A65339586231a34';
+    const zunamiTeam = admin.address;
     console.log('Protocol Admin:', zunamiTeam);
 
 
-    const vlZUN = '0x45af4F12B46682B3958B297bAcebde2cE2E795c3';
+    const vlZUN = '0x27A0223c1a8a9688f31d47CB89542a5CBbBa20E9';
 
     console.log('Deploy TimelockController:');
     const TimelockController = await ethers.getContractFactory('TimelockController');
@@ -22,20 +22,19 @@ async function main() {
     //     zunamiTeam // admin
     // );
     // await timelockController.deployed();
-
-    const timelockController = await TimelockController.attach('0xd752bbeb0b199026cbb7d76e4EEb30440abefca4');
+    const timelockController = await TimelockController.attach('0x6C8411e9c54335D9deE5746fdAD7d9e183182815');
 
     console.log('TimelockController:', timelockController.address);
 
     console.log('Deploy ZunamiGovernor:');
     const ZunamiGovernor = await ethers.getContractFactory('ZunamiGovernor');
-    // const zunamiGovernor = await ZunamiGovernor.deploy(vlZUN, timelockController.address);
-    // await zunamiGovernor.deployed();
-    const zunamiGovernor = await ZunamiGovernor.attach('0x0357F8afCf8BD2b119a4451bf605BEF8cCA03f98');
+    const zunamiGovernor = await ZunamiGovernor.deploy(vlZUN, timelockController.address);
+    await zunamiGovernor.deployed();
+    // const zunamiGovernor = await ZunamiGovernor.attach('');
     console.log('ZunamiGovernor:', zunamiGovernor.address);
 
     await timelockController.grantRole(await timelockController.PROPOSER_ROLE(), zunamiGovernor.address);
-    console.log('Grant PROPOSER_ROLE to ZunamiGovernor for: ', zunamiGovernor.address);
+    console.log('Grant TimelockController\'s PROPOSER_ROLE to ZunamiGovernor: ', zunamiGovernor.address);
 }
 
 main()
