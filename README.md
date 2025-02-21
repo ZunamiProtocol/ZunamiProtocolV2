@@ -7,7 +7,7 @@ Zunami is a decentralized protocol that issues aggregated stablecoins, whose col
 #### What is Omni pool?
 The Omni pool operates as a Yield Aggregator by providing liquidity to the multiple strategies and reinvesting profits. Each zunStable is backed by its own Omni pool, managed through DAO governance. The DAO manages the addition of new strategies and the rebalancing of funds between strategies.
 
-#### Why market need zunStables?
+#### Why the markets need zunStables?
 We see a vast number of stablecoins in the market, and their quantity continues to grow. It becomes evident that there is a need for aggregated products capable of providing users with an optimized experience. By design, zunStables aim to lead the charts through the aggregation of the best tools in the market.
 
 #### What is the role of the ZUN token?
@@ -19,8 +19,8 @@ We see a vast number of stablecoins in the market, and their quantity continues 
 ## How safe is it to use Zunami and zunStables?
 
 #### Risk Assessment:
-- Smart Contract Risk: the smart contracts of Zunami v2 immutable and underwent a comprehensive audit before deployment from Nomoi.
-- Depeg Risk: zunStables are 100% collateralized and incorporate a safeguard against depegging through the Algoritmic peg stabilizer mechanism. This mechanism manages minting and redemption based on the proportion within the curve pool.
+- Smart Contract Risk: the smart contracts of Zunami v2 are immutable and underwent a comprehensive audit before deployment from Nomoi.
+- Depeg Risk: zunStables are 100% collateralized and incorporate a safeguard against depegging through the Algorithmic peg stabilizer mechanism. This mechanism manages minting and redemption based on the proportion within the curve pool.
 - Collateral Risk: all stablecoins utilized in Omni pool strategies are chosen following a risk management policy. Should the collateralization fall below 100%, a recapitalization process will initiate, utilizing both ZUN tokens and protocol-generated earnings.
 - Custody Risk: after three months from the launch of Zunami v2, the protocol will transition entirely to on-chain DAO governance, determined by the votes of ZUN stakers.
 
