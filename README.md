@@ -20,7 +20,7 @@ We see a vast number of stablecoins in the market, and their quantity continues 
 
 #### Risk Assessment:
 - Smart Contract Risk: the smart contracts of Zunami v2 immutable and underwent a comprehensive audit before deployment from Nomoi.
-- Depeg Risk: zunStables are 100% collateralized and incorporate a safeguard against depegging through the Algoritmic peg stabilizer mechanism. This mechanism manages minting and redemption based on the proportion within the curve pool.
+- Depeg Risk: zunStables are 100% collateralized and incorporate a safeguard against depegging through the Algorithmic peg stabilizer mechanism. This mechanism manages minting and redemption based on the proportion within the curve pool.
 - Collateral Risk: all stablecoins utilized in Omni pool strategies are chosen following a risk management policy. Should the collateralization fall below 100%, a recapitalization process will initiate, utilizing both ZUN tokens and protocol-generated earnings.
 - Custody Risk: after three months from the launch of Zunami v2, the protocol will transition entirely to on-chain DAO governance, determined by the votes of ZUN stakers.
 
